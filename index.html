@@ -11,9 +11,9 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="css/styles.css?v=5">
+    <link rel="stylesheet" href="css/styles.css?v=6">
 </head>
 <body>
 
@@ -21,12 +21,13 @@
         <nav class="nav container">
             <a href="#inicio" class="nav__logo">Brianna's <span>15</span></a>
             <ul class="nav__menu" id="nav-menu">
-                <li><a href="#inicio" class="nav__link">Inicio</a></li>
-                <li><a href="#invitacion" class="nav__link">Invitación</a></li>
-                <li><a href="#historia" class="nav__link">Historia</a></li>
-                <li><a href="#evento" class="nav__link">Evento</a></li>
-                <li><a href="#rsvp" class="nav__link nav__link--cta">Confirmar</a></li>
+                <li><a href="#inicio" class="nav__link" data-i18n="nav_inicio">Inicio</a></li>
+                <li><a href="#invitacion" class="nav__link" data-i18n="nav_invitacion">Invitación</a></li>
+                <li><a href="#historia" class="nav__link" data-i18n="nav_historia">Historia</a></li>
+                <li><a href="#evento" class="nav__link" data-i18n="nav_evento">Evento</a></li>
+                <li><a href="#rsvp" class="nav__link nav__link--cta" data-i18n="nav_confirmar">Confirmar</a></li>
             </ul>
+            <button id="lang-toggle" class="nav__lang" aria-label="Switch language">EN</button>
             <button class="nav__toggle" id="nav-toggle" aria-label="Abrir menú">
                 <span></span><span></span><span></span>
             </button>
@@ -38,39 +39,39 @@
         <section id="inicio" class="hero">
             <div class="hero__overlay"></div>
             <div class="hero__content">
-                <p class="hero__pre animate-on-scroll">Con la bendición de Dios</p>
-                <h1 class="hero__title animate-on-scroll">Mis XV Años</h1>
+                <p class="hero__pre animate-on-scroll" data-i18n="hero_pre">Con la bendición de Dios</p>
+                <h1 class="hero__title animate-on-scroll" data-i18n="hero_title">Mis XV Años</h1>
                 <div class="divider animate-on-scroll">
                     <span class="line"></span>
                     <span class="diamond">◆</span>
                     <span class="line"></span>
                 </div>
                 <p class="hero__name animate-on-scroll">Brianna Itzel Gomez</p>
-                <p class="hero__date animate-on-scroll"><time datetime="2026-07-25">25 de Julio, 2026</time></p>
+                <p class="hero__date animate-on-scroll"><time datetime="2026-07-25" data-i18n="hero_date">25 de Julio, 2026</time></p>
 
                 <div class="countdown animate-on-scroll" id="countdown">
                     <div class="countdown__block">
                         <span id="days" class="countdown__number">000</span>
-                        <span class="countdown__label">Días</span>
+                        <span class="countdown__label" data-i18n="cd_days">Días</span>
                     </div>
                     <div class="countdown__separator">:</div>
                     <div class="countdown__block">
                         <span id="hours" class="countdown__number">00</span>
-                        <span class="countdown__label">Horas</span>
+                        <span class="countdown__label" data-i18n="cd_hours">Horas</span>
                     </div>
                     <div class="countdown__separator">:</div>
                     <div class="countdown__block">
                         <span id="minutes" class="countdown__number">00</span>
-                        <span class="countdown__label">Min</span>
+                        <span class="countdown__label" data-i18n="cd_min">Min</span>
                     </div>
                     <div class="countdown__separator">:</div>
                     <div class="countdown__block">
                         <span id="seconds" class="countdown__number">00</span>
-                        <span class="countdown__label">Seg</span>
+                        <span class="countdown__label" data-i18n="cd_sec">Seg</span>
                     </div>
                 </div>
 
-                <a href="#rsvp" class="btn btn--primary animate-on-scroll">Confirmar Asistencia</a>
+                <a href="#rsvp" class="btn btn--primary animate-on-scroll" data-i18n="hero_cta">Confirmar Asistencia</a>
             </div>
         </section>
 
@@ -79,15 +80,15 @@
             <div class="container">
                 <div class="invitation__card animate-on-scroll">
                     <div class="ornament">✦</div>
-                    <p class="invitation__blessing">
+                    <p class="invitation__blessing" data-i18n="inv_blessing">
                         Con la bendición de Dios y mis familiares<br>
                         estás cordialmente invitado a
                     </p>
-                    <h2 class="invitation__title">Mis XV Años</h2>
+                    <h2 class="invitation__title" data-i18n="inv_title">Mis XV Años</h2>
                     <div class="divider">
                         <span class="line"></span><span class="diamond">◆</span><span class="line"></span>
                     </div>
-                    <p class="invitation__message">
+                    <p class="invitation__message" data-i18n="inv_message">
                         Ha llegado un momento muy especial en mi vida, muchos recuerdos 
                         con familia y amigos que me han traído a este punto. Ahora entra 
                         una etapa nueva en mi vida y espero puedan celebrar conmigo, gracias.
@@ -95,11 +96,11 @@
 
                     <div class="invitation__families">
                         <div class="family-block">
-                            <span class="family-label">Padres</span>
+                            <span class="family-label" data-i18n="inv_parents">Padres</span>
                             <p class="family-names">Francisco Gomez<br>&amp; Crispina López</p>
                         </div>
                         <div class="family-block">
-                            <span class="family-label">Padrinos</span>
+                            <span class="family-label" data-i18n="inv_godparents">Padrinos</span>
                             <p class="family-names">Luis A. Garcia<br>&amp; Kimberly V. Garcia</p>
                         </div>
                     </div>
@@ -111,7 +112,7 @@
         <!-- ═══════════════════ HISTORIA ═══════════════════ -->
         <section id="historia" class="story">
             <div class="container">
-                <h2 class="section__title animate-on-scroll">A Través de los Años</h2>
+                <h2 class="section__title animate-on-scroll" data-i18n="story_title">A Través de los Años</h2>
                 <div class="divider animate-on-scroll">
                     <span class="line"></span><span class="diamond">◆</span><span class="line"></span>
                 </div>
@@ -121,7 +122,7 @@
                             <div class="polaroid__img-wrapper">
                                 <img src="assets/timeline-1.jpg" alt="Mis primeros pasos" loading="lazy">
                             </div>
-                            <p class="polaroid__caption">Mis primeros pasos</p>
+                            <p class="polaroid__caption" data-i18n="photo_1">Mis primeros pasos</p>
                         </div>
                     </div>
 
@@ -130,7 +131,7 @@
                             <div class="polaroid__img-wrapper">
                                 <img src="assets/timeline-2.jpg" alt="Creciendo con fe" loading="lazy">
                             </div>
-                            <p class="polaroid__caption">Creciendo con fe</p>
+                            <p class="polaroid__caption" data-i18n="photo_2">Creciendo con fe</p>
                         </div>
                     </div>
 
@@ -139,7 +140,7 @@
                             <div class="polaroid__img-wrapper">
                                 <img src="assets/timeline-3.jpg" alt="Hoy, mis XV Años" loading="lazy">
                             </div>
-                            <p class="polaroid__caption">Hoy, mis XV Años</p>
+                            <p class="polaroid__caption" data-i18n="photo_3">Hoy, mis XV Años</p>
                         </div>
                     </div>
                 </div>
@@ -149,7 +150,7 @@
         <!-- ═══════════════════ EVENTO ═══════════════════ -->
         <section id="evento" class="event">
             <div class="container">
-                <h2 class="section__title animate-on-scroll">Detalles del Evento</h2>
+                <h2 class="section__title animate-on-scroll" data-i18n="event_title">Detalles del Evento</h2>
                 <div class="divider animate-on-scroll">
                     <span class="line"></span><span class="diamond">◆</span><span class="line"></span>
                 </div>
@@ -158,11 +159,11 @@
                     <div class="event__card event__card--church animate-on-scroll">
                         <div class="event__card-overlay"></div>
                         <div class="event__card-content">
-                            <span class="event__tag">Ceremonia Religiosa</span>
+                            <span class="event__tag" data-i18n="event_ceremony">Ceremonia Religiosa</span>
                             <h3 class="event__venue">Iglesia St. Bonaventure's<br>Roman Catholic Church</h3>
                             <address class="event__address">174 Ramsey St.<br>Paterson, NJ 07501</address>
                             <time datetime="2026-07-25T14:00-04:00" class="event__time-badge">2:00 PM</time>
-                            <a href="https://maps.google.com/?q=174+Ramsey+St+Paterson+NJ+07501" target="_blank" rel="noopener" class="btn btn--outline-light">
+                            <a href="https://maps.google.com/?q=174+Ramsey+St+Paterson+NJ+07501" target="_blank" rel="noopener" class="btn btn--outline-light" data-i18n="event_map">
                                 Ver Ubicación
                             </a>
                         </div>
@@ -171,11 +172,12 @@
                     <div class="event__card event__card--banquet animate-on-scroll">
                         <div class="event__card-overlay"></div>
                         <div class="event__card-content">
-                            <span class="event__tag">Recepción</span>
+                            <span class="event__tag" data-i18n="event_reception">Recepción</span>
                             <h3 class="event__venue">Milan Banquets</h3>
                             <address class="event__address">32 Passaic St.<br>Garfield, NJ 07026</address>
-                            <time datetime="2026-07-25" class="event__time-badge">Después de la ceremonia</time>
-                            <a href="https://maps.google.com/?q=32+Passaic+St+Garfield+NJ+07026" target="_blank" rel="noopener" class="btn btn--outline-light">
+                            <time datetime="2026-07-25" class="event__time-badge" data-i18n="event_after">Después de la ceremonia</time>
+                            <p class="event__arrival" data-i18n="event_arrival">Favor de llegar 30 minutos antes</p>
+                            <a href="https://maps.google.com/?q=32+Passaic+St+Garfield+NJ+07026" target="_blank" rel="noopener" class="btn btn--outline-light" data-i18n="event_map">
                                 Ver Ubicación
                             </a>
                         </div>
@@ -185,14 +187,14 @@
                 <div class="protocol animate-on-scroll">
                     <div class="protocol__card">
                         <div class="protocol__item">
-                            <span class="protocol__label">Código de Vestimenta</span>
-                            <p>Formal — Etiqueta Rigurosa</p>
-                            <p class="protocol__warning">Favor de NO usar el color morado</p>
+                            <span class="protocol__label" data-i18n="proto_dress">Código de Vestimenta</span>
+                            <p data-i18n="proto_formal">Formal — Etiqueta Rigurosa</p>
+                            <p class="protocol__warning" data-i18n="proto_no_purple">Favor de NO usar el color morado</p>
                         </div>
                         <div class="protocol__divider-v"></div>
                         <div class="protocol__item">
-                            <span class="protocol__label">Nota Especial</span>
-                            <p>Lluvia de Sobres</p>
+                            <span class="protocol__label" data-i18n="proto_note">Nota Especial</span>
+                            <p data-i18n="proto_envelopes">Lluvia de Sobres</p>
                         </div>
                     </div>
                 </div>
@@ -202,67 +204,67 @@
         <!-- ═══════════════════ RSVP ═══════════════════ -->
         <section id="rsvp" class="rsvp">
             <div class="container">
-                <h2 class="section__title animate-on-scroll">Confirmar Asistencia</h2>
+                <h2 class="section__title animate-on-scroll" data-i18n="rsvp_title">Confirmar Asistencia</h2>
                 <div class="divider animate-on-scroll">
                     <span class="line"></span><span class="diamond">◆</span><span class="line"></span>
                 </div>
-                <p class="rsvp__deadline animate-on-scroll">Favor de confirmar antes del <strong><time datetime="2026-06-25">25 de Junio, 2026</time></strong></p>
+                <p class="rsvp__deadline animate-on-scroll" data-i18n="rsvp_deadline">Favor de confirmar antes del <strong><time datetime="2026-06-25">25 de Junio, 2026</time></strong></p>
 
                 <div class="rsvp__card animate-on-scroll">
                     <form id="rsvp-form" novalidate>
                         <div class="form__group">
-                            <label for="name">Nombre Completo</label>
-                            <input type="text" id="name" name="name" placeholder="Ej: María García" required autocomplete="name">
+                            <label for="name" data-i18n="form_name">Nombre Completo</label>
+                            <input type="text" id="name" name="name" data-i18n-placeholder="form_name_ph" placeholder="Ej: María García" required autocomplete="name">
                             <span class="form__error" id="name-error"></span>
                         </div>
 
                         <div class="form__row">
                             <div class="form__group">
-                                <label for="attending">¿Asistirás?</label>
+                                <label for="attending" data-i18n="form_attending">¿Asistirás?</label>
                                 <select id="attending" name="attending" required>
-                                    <option value="">Selecciona...</option>
-                                    <option value="Sí, asistiré">Sí, asistiré</option>
-                                    <option value="No podré asistir">No podré asistir</option>
+                                    <option value="" data-i18n="form_select">Selecciona...</option>
+                                    <option value="Sí, asistiré" data-i18n="form_yes">Sí, asistiré</option>
+                                    <option value="No podré asistir" data-i18n="form_no">No podré asistir</option>
                                 </select>
                                 <span class="form__error" id="attending-error"></span>
                             </div>
                             <div class="form__group">
-                                <label for="guests">Número de Personas</label>
+                                <label for="guests" data-i18n="form_guests">Número de Personas</label>
                                 <select id="guests" name="guests">
-                                    <option value="1">1 Persona</option>
-                                    <option value="2">2 Personas</option>
-                                    <option value="3">3 Personas</option>
-                                    <option value="4">4 Personas</option>
-                                    <option value="5">5 Personas</option>
+                                    <option value="1" data-i18n="form_1p">1 Persona</option>
+                                    <option value="2" data-i18n="form_2p">2 Personas</option>
+                                    <option value="3" data-i18n="form_3p">3 Personas</option>
+                                    <option value="4" data-i18n="form_4p">4 Personas</option>
+                                    <option value="5" data-i18n="form_5p">5 Personas</option>
                                 </select>
                             </div>
                         </div>
 
                         <div class="form__group">
-                            <label for="notes">Alergias o Notas</label>
-                            <textarea id="notes" name="notes" rows="3" placeholder="Restricciones alimenticias, mensaje, etc."></textarea>
+                            <label for="notes" data-i18n="form_notes">Alergias o Notas</label>
+                            <textarea id="notes" name="notes" rows="3" data-i18n-placeholder="form_notes_ph" placeholder="Restricciones alimenticias, mensaje, etc."></textarea>
                         </div>
 
                         <button type="submit" class="btn btn--primary btn--full" id="submit-btn">
-                            <span class="btn__text">Enviar Confirmación</span>
-                            <span class="btn__loader hidden">Enviando...</span>
+                            <span class="btn__text" data-i18n="form_submit">Enviar Confirmación</span>
+                            <span class="btn__loader hidden" data-i18n="form_sending">Enviando...</span>
                         </button>
                     </form>
 
                     <div id="rsvp-success" class="rsvp__success hidden">
                         <div class="success__icon">✓</div>
-                        <h3>Gracias por confirmar</h3>
-                        <p>Tu respuesta ha sido registrada exitosamente.<br>Nos vemos el <time datetime="2026-07-25">25 de Julio</time>.</p>
+                        <h3 data-i18n="success_title">Gracias por confirmar</h3>
+                        <p data-i18n="success_msg">Tu respuesta ha sido registrada exitosamente.<br>Nos vemos el <time datetime="2026-07-25">25 de Julio</time>.</p>
                     </div>
 
                     <div id="rsvp-error" class="rsvp__error-msg hidden">
-                        <p>Hubo un problema al enviar. Puedes confirmar directamente al:</p>
-                        <a href="tel:+19738517863" class="btn btn--outline">Llamar al 973-851-7863</a>
+                        <p data-i18n="error_msg">Hubo un problema al enviar. Puedes confirmar directamente al:</p>
+                        <a href="tel:+19738517863" class="btn btn--outline" data-i18n="error_call">Llamar al 973-851-7863</a>
                     </div>
                 </div>
 
                 <div class="rsvp__alt animate-on-scroll">
-                    <p>¿Prefieres confirmar por teléfono?</p>
+                    <p data-i18n="alt_phone">¿Prefieres confirmar por teléfono?</p>
                     <a href="tel:+19738517863" class="rsvp__phone">973-851-7863</a>
                 </div>
             </div>
@@ -275,7 +277,7 @@
                 <span class="line"></span><span class="diamond">◆</span><span class="line"></span>
             </div>
             <p class="footer__name">Brianna Itzel Gomez</p>
-            <p class="footer__date"><time datetime="2026-07-25">25 de Julio, 2026</time></p>
+            <p class="footer__date"><time datetime="2026-07-25" data-i18n="hero_date">25 de Julio, 2026</time></p>
         </div>
     </footer>
 
