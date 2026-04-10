@@ -224,6 +224,7 @@ h1, h2, h3, h4 {
     font-size: 2.2rem;
     color: var(--lavender-dark);
     font-weight: 400;
+    margin-right: 2rem;
 }
 
 .nav__logo span {
@@ -938,7 +939,7 @@ textarea { resize: none; }
 
 .butterfly {
     position: fixed;
-    z-index: 0;
+    z-index: 90;
     pointer-events: none;
     font-size: 1.5rem;
     animation: butterfly-float var(--duration) var(--delay) linear infinite;
@@ -982,7 +983,7 @@ textarea { resize: none; }
 
     .nav__logo {
         position: absolute;
-        left: 50%;
+        left: 35%;
         transform: translateX(-50%);
     }
 
