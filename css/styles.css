@@ -11,9 +11,9 @@
     --lavender-deeper:#7A5280;
     --lavender-light: #E8D5E8;
     --lavender-bg:    #F8F2F8;
-    --gold:           #D4AF37;
-    --gold-dark:      #B8962E;
-    --gold-light:     #E8CC6E;
+    --silver:         #B0B0B0;
+    --silver-dark:    #888888;
+    --silver-light:   #E0E0E0;
     --white:          #FFFFFF;
     --off-white:      #FDFBFD;
     --text-primary:   #2D2032;
@@ -109,11 +109,11 @@ h1, h2, h3, h4 {
 .divider .line {
     width: 3.75rem;
     height: 1px;
-    background-color: var(--gold);
+    background-color: var(--silver);
 }
 
 .divider .diamond {
-    color: var(--gold);
+    color: var(--silver);
     font-size: 0.6rem;
 }
 
@@ -228,7 +228,7 @@ h1, h2, h3, h4 {
 }
 
 .nav__logo span {
-    color: var(--gold);
+    color: var(--silver);
     font-size: 2.2rem;
     vertical-align: baseline;
 }
@@ -435,7 +435,7 @@ h1, h2, h3, h4 {
 }
 
 .ornament {
-    color: var(--gold);
+    color: var(--silver);
     font-size: 1.2rem;
     margin-bottom: 1.5rem;
 }
@@ -482,7 +482,7 @@ h1, h2, h3, h4 {
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 3px;
-    color: var(--gold);
+    color: var(--silver);
     margin-bottom: 0.75rem;
     font-weight: 600;
 }
@@ -653,7 +653,7 @@ h1, h2, h3, h4 {
     font-family: var(--font-heading);
     font-size: 1.4rem;
     font-weight: 600;
-    color: var(--gold-light);
+    color: var(--silver-light);
     margin-bottom: 0.75rem;
     display: block;
 }
@@ -938,8 +938,9 @@ textarea { resize: none; }
 }
 
 .butterfly {
-    position: fixed;
-    z-index: 90;
+    position: absolute;
+    top: 0;
+    z-index: 2;
     pointer-events: none;
     font-size: 1.5rem;
     animation: butterfly-float var(--duration) var(--delay) linear infinite;

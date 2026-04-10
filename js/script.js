@@ -194,8 +194,10 @@ function initRSVPForm() {
 /* ═══════════════════ BUTTERFLIES ═══════════════════ */
 
 function initButterflies() {
-    const COLORS = ['#C8A2C8', '#D8BFD8', '#C0C0C0', '#B0A0B8', '#A9A9C8', '#DCD0E0', '#B8B8D0', '#C4B0C4'];
-    const COUNT = 8;
+    // Reducimos la cantidad para que sean pocas
+    const COUNT = 5;
+    const heroSection = document.getElementById('inicio');
+    if (!heroSection) return;
 
     for (let i = 0; i < COUNT; i++) {
         const el = document.createElement('span');
@@ -207,18 +209,30 @@ function initButterflies() {
         inner.textContent = '🦋';
         el.appendChild(inner);
 
-        const duration = 10 + Math.random() * 8;
-        const delay = Math.random() * duration;
-        const left = Math.random() * 100;
-        const size = 1 + Math.random() * 0.8;
+        // Mayor duración para que tarden en salir, y delays muy separados
+        const duration = 18 + Math.random() * 12; // 18s a 30s
+        const delay = Math.random() * 30; // 0 a 30s de diferencia
+        // Mantenemos las mariposas enfocadas más hacia el centro (10% a 90%)
+        const left = 10 + Math.random() * 80; 
+        const size = 1.2 + Math.random() * 0.5;
+        
+        // Color: 70% chance morado/rosa, 30% chance plata (silver)
+        const isSilver = Math.random() < 0.3;
+        if (isSilver) {
+            el.style.filter = `grayscale(100%) brightness(1.6) contrast(0.8)`;
+        } else {
+            // Hue rotate para convertir el azul del emoji 🦋 a morado y rosa (entre 70deg y 130deg)
+            const hue = 70 + Math.random() * 60;
+            el.style.filter = `hue-rotate(${hue}deg) saturate(1.2)`;
+        }
 
         el.style.setProperty('--duration', `${duration}s`);
+        // Usamos delay negativo para que algunas ya vengan en camino
         el.style.setProperty('--delay', `-${delay}s`);
         el.style.left = `${left}%`;
         el.style.fontSize = `${size}rem`;
-        el.style.filter = `hue-rotate(${COLORS.indexOf(COLORS[i % COLORS.length]) * 30}deg)`;
 
-        document.body.appendChild(el);
+        heroSection.appendChild(el);
     }
 }
 
