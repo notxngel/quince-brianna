@@ -25,6 +25,7 @@
                 <li><a href="#invitacion" class="nav__link" data-i18n="nav_invitacion">Invitación</a></li>
                 <li><a href="#historia" class="nav__link" data-i18n="nav_historia">Historia</a></li>
                 <li><a href="#evento" class="nav__link" data-i18n="nav_evento">Evento</a></li>
+                <li><a href="#faq" class="nav__link" data-i18n="nav_faq">Preguntas</a></li>
                 <li><a href="#rsvp" class="nav__link nav__link--cta" data-i18n="nav_confirmar">Confirmar</a></li>
             </ul>
             <button id="lang-toggle" class="nav__lang" aria-label="Switch language">EN</button>
@@ -184,7 +185,8 @@
                     </div>
                 </div>
 
-                <div class="protocol animate-on-scroll">
+                <div class="protocol animate-on-scroll" hidden
+                >
                     <div class="protocol__card">
                         <div class="protocol__item">
                             <span class="protocol__label" data-i18n="proto_dress">Código de Vestimenta</span>
@@ -197,6 +199,48 @@
                             <p data-i18n="proto_envelopes">Lluvia de Sobres</p>
                         </div>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════ FAQ ═══════════════════ -->
+        <section id="faq" class="faq">
+            <div class="container">
+                <h2 class="section__title animate-on-scroll" data-i18n="faq_title">Preguntas Frecuentes</h2>
+                <div class="divider animate-on-scroll">
+                    <span class="line"></span><span class="diamond">◆</span><span class="line"></span>
+                </div>
+
+                <h3 class="faq__alert animate-on-scroll" data-i18n="faq_alert">¡Atención! Por favor lee esto antes de confirmar</h3>
+
+                <div class="faq__grid animate-on-scroll">
+                    <details class="faq__item">
+                        <summary class="faq__question" data-i18n="faq_q1">¿Cuál es el código de vestimenta?</summary>
+                        <div class="faq__answer">
+                            <p data-i18n="faq_a1">Formal (Etiqueta Rigurosa). Te pedimos amablemente <strong>NO</strong> utilizar el color morado ni plateado, ya que están reservados para la Quinceañera.</p>
+                        </div>
+                    </details>
+
+                    <details class="faq__item">
+                        <summary class="faq__question" data-i18n="faq_q2">¿Puedo llevar un acompañante o niños (plus one)?</summary>
+                        <div class="faq__answer">
+                            <p data-i18n="faq_a2">Nuestra recepción es un evento privado y con capacidad limitada. Te rogamos asistir únicamente las personas especificadas en el formulario de confirmación (RSVP).</p>
+                        </div>
+                    </details>
+
+                    <details class="faq__item">
+                        <summary class="faq__question" data-i18n="faq_q3">¿Tienen alguna sugerencia de regalo?</summary>
+                        <div class="faq__answer">
+                            <p data-i18n="faq_a3"> Si deseas tener un detalle con Brianna, agradecemos mucho el formato de "Lluvia de Sobres" (Efectivo).</p>
+                        </div>
+                    </details>
+
+                    <details class="faq__item">
+                        <summary class="faq__question" data-i18n="faq_q4">¿Cuál es la fecha límite para confirmar asistencia?</summary>
+                        <div class="faq__answer">
+                            <p data-i18n="faq_a4">Por favor confírmanos tu asistencia a más tardar el 25 de Junio, 2026, para poder organizar todos los detalles con anticipación.</p>
+                        </div>
+                    </details>
                 </div>
             </div>
         </section>
