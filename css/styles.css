@@ -365,7 +365,7 @@ h1, h2, h3, h4 {
 
 .hero__name {
     font-family: var(--font-script);
-    font-size: clamp(2.5rem, 8vw, 5rem);
+    font-size: clamp(3rem, 8vw, 5rem);
     font-weight: 400;
     margin-bottom: 0.5rem;
     text-shadow: 0 3px 15px rgba(0, 0, 0, 0.5);
@@ -741,7 +741,6 @@ h1, h2, h3, h4 {
     font-size: 1.1rem;
     font-weight: 600;
     margin-bottom: 2rem;
-    text-transform: uppercase;
     letter-spacing: 1px;
 }
 
