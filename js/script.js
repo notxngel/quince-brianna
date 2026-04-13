@@ -121,7 +121,7 @@ function initRSVPForm() {
     const successEl  = document.getElementById('rsvp-success');
     const errorEl    = document.getElementById('rsvp-error');
 
-    const WEBHOOK_URL = 'https://hook.us1.make.com/TU_WEBHOOK_AQUI';
+    const WEBHOOK_URL = 'https://hook.us2.make.com/dod3woso8orm9cu4jc5tip49ni6vnkdw';
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -330,7 +330,7 @@ const translations = {
         event_ceremony: 'Ceremonia Religiosa',
         event_reception: 'Recepción',
         event_map: 'Ver Ubicación',
-        event_after: 'Después de la ceremonia',
+        event_after: '7:00 PM',
         event_arrival: 'Favor de llegar 30 minutos antes',
         proto_dress: 'Código de Vestimenta',
         proto_formal: 'Formal — Etiqueta Rigurosa',
@@ -399,7 +399,7 @@ const translations = {
         event_ceremony: 'Religious Ceremony',
         event_reception: 'Reception',
         event_map: 'View Location',
-        event_after: 'After the ceremony',
+        event_after: '7:00 PM',
         event_arrival: 'Please arrive 30 minutes early',
         proto_dress: 'Dress Code',
         proto_formal: 'Formal — Black Tie',
