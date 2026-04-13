@@ -1197,3 +1197,29 @@ textarea { resize: none; }
 
     .event__card { min-height: 20rem; }
 }
+
+/* ═══════════════════ ULTRA-SMALL SCREENS (320px) ═══════════════════ */
+@media (max-width: 22.5em) {
+    .nav {
+        padding: 0 1rem !important;
+    }
+
+    .nav__logo {
+        font-size: 1.6rem;
+        margin-right: 0.5rem;
+    }
+
+    .nav__logo span {
+        font-size: 1.6rem;
+    }
+
+    .nav__lang {
+        padding: 0.25rem 0.6rem;
+        font-size: 0.65rem;
+        margin-right: 0.25rem;
+    }
+    
+    .nav__toggle {
+        gap: 0.25rem;
+    }
+}
