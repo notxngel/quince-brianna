@@ -80,7 +80,7 @@ ul { list-style: none; }
     width: 100%;
     max-width: 68.75rem;
     margin: 0 auto;
-    padding: 0 1.5rem;
+    padding: 0 clamp(1rem, 4vw, 1.5rem);
 }
 
 .hidden { display: none !important; }
@@ -123,11 +123,11 @@ h1, h2, h3, h4 {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0.875rem 2.25rem;
+    padding: clamp(0.7rem, 2vw, 0.875rem) clamp(1.5rem, 5vw, 2.25rem);
     border-radius: 3.125rem;
     font-family: var(--font-body);
     font-weight: 500;
-    font-size: 0.95rem;
+    font-size: clamp(0.8rem, 2.5vw, 0.95rem);
     letter-spacing: 0.5px;
     cursor: pointer;
     border: none;
@@ -216,32 +216,32 @@ h1, h2, h3, h4 {
 .nav {
     display: flex;
     align-items: center;
-    height: 4.375rem;
-    padding: 0 2rem !important; /* Fixed padding to stay inside the capsule curves */
+    height: clamp(3.5rem, 8vw, 4.375rem);
+    padding: 0 clamp(1rem, 3vw, 2rem);
 }
 
 .nav__logo {
     font-family: var(--font-script);
-    font-size: 2.2rem;
+    font-size: clamp(1.3rem, 5.5vw, 2.2rem);
     color: var(--lavender-dark);
     font-weight: 400;
-    margin-right: 1.5rem;
+    margin-right: clamp(0.5rem, 2vw, 2rem);
     white-space: nowrap;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
+    flex-shrink: 1;
+    min-width: 0;
 }
 
 .nav__logo span {
     color: var(--silver);
-    font-size: 2.2rem;
+    font-size: inherit;
     vertical-align: baseline;
 }
 
 .nav__menu {
     display: flex;
-    gap: 1.5rem;
+    gap: clamp(1rem, 2vw, 2rem);
     margin-left: auto;
+    margin-right: clamp(0.5rem, 2vw, 2rem);
 }
 
 .nav__link {
@@ -347,7 +347,7 @@ h1, h2, h3, h4 {
 .hero__content {
     position: relative;
     z-index: 3;
-    padding: 6.25rem 1.5rem 5rem;
+    padding: clamp(5rem, 12vw, 6.25rem) clamp(1rem, 4vw, 1.5rem) clamp(3rem, 8vw, 5rem);
 }
 
 .hero__pre {
@@ -369,10 +369,12 @@ h1, h2, h3, h4 {
 
 .hero__name {
     font-family: var(--font-script);
-    font-size: clamp(3rem, 8vw, 5rem);
+    font-size: clamp(2rem, 8vw, 5rem);
     font-weight: 400;
     margin-bottom: 0.5rem;
     text-shadow: 0 3px 15px rgba(0, 0, 0, 0.5);
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 .hero__date {
@@ -389,35 +391,35 @@ h1, h2, h3, h4 {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 3rem;
+    gap: clamp(0.25rem, 1.5vw, 0.5rem);
+    margin-bottom: clamp(2rem, 5vw, 3rem);
 }
 
 .countdown__block {
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-width: 3.75rem;
+    min-width: clamp(2.5rem, 10vw, 3.75rem);
 }
 
 .countdown__number {
     font-family: var(--font-heading);
-    font-size: clamp(2rem, 5vw, 3rem);
+    font-size: clamp(1.4rem, 5vw, 3rem);
     font-weight: 600;
     line-height: 1;
 }
 
 .countdown__label {
-    font-size: 0.7rem;
+    font-size: clamp(0.55rem, 1.5vw, 0.7rem);
     text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: clamp(1px, 0.5vw, 2px);
     opacity: 0.8;
     margin-top: 0.25rem;
 }
 
 .countdown__separator {
     font-family: var(--font-heading);
-    font-size: 2rem;
+    font-size: clamp(1.2rem, 4vw, 2rem);
     opacity: 0.5;
     align-self: flex-start;
     margin-top: 0.25rem;
@@ -433,7 +435,7 @@ h1, h2, h3, h4 {
     max-width: 43.75rem;
     margin: 0 auto;
     text-align: center;
-    padding: 3.75rem 2.5rem;
+    padding: clamp(2rem, 6vw, 3.75rem) clamp(1.25rem, 4vw, 2.5rem);
     background: var(--white);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-card);
@@ -452,21 +454,21 @@ h1, h2, h3, h4 {
 }
 
 .invitation__blessing {
-    font-size: 1rem;
+    font-size: clamp(0.85rem, 2.5vw, 1rem);
     color: var(--text-secondary);
     margin-bottom: 1rem;
     line-height: 1.8;
 }
 
 .invitation__title {
-    font-size: clamp(2.2rem, 5vw, 3rem);
+    font-size: clamp(1.8rem, 5vw, 3rem);
     color: var(--lavender-dark);
     margin-bottom: 1rem;
 }
 
 .invitation__message {
     color: var(--text-secondary);
-    font-size: 0.95rem;
+    font-size: clamp(0.85rem, 2.5vw, 0.95rem);
     max-width: 31.25rem;
     margin: 0 auto 2.5rem;
     line-height: 1.9;
@@ -475,7 +477,7 @@ h1, h2, h3, h4 {
 .invitation__families {
     display: flex;
     justify-content: center;
-    gap: 3.75rem;
+    gap: clamp(1.5rem, 5vw, 3.75rem);
     flex-wrap: wrap;
 }
 
@@ -485,9 +487,9 @@ h1, h2, h3, h4 {
 
 .family-label {
     display: block;
-    font-size: 0.75rem;
+    font-size: clamp(0.65rem, 2vw, 0.75rem);
     text-transform: uppercase;
-    letter-spacing: 3px;
+    letter-spacing: clamp(1px, 0.5vw, 3px);
     color: var(--silver);
     margin-bottom: 0.75rem;
     font-weight: 600;
@@ -495,7 +497,7 @@ h1, h2, h3, h4 {
 
 .family-names {
     font-family: var(--font-heading);
-    font-size: 1.15rem;
+    font-size: clamp(0.95rem, 3vw, 1.15rem);
     color: var(--text-primary);
     line-height: 1.6;
 }
@@ -510,14 +512,15 @@ h1, h2, h3, h4 {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 5rem;
+    gap: clamp(2.5rem, 8vw, 5rem);
     max-width: 50rem;
-    margin: 3rem auto;
+    margin: clamp(1.5rem, 4vw, 3rem) auto;
     position: relative;
 }
 
 .gallery-scattered__item {
-    width: 280px;
+    width: clamp(200px, 60vw, 280px);
+    max-width: 90%;
     position: relative;
 }
 
@@ -608,7 +611,7 @@ h1, h2, h3, h4 {
     width: 100%;
     text-align: center;
     font-family: var(--font-heading);
-    font-size: 1.15rem;
+    font-size: clamp(0.9rem, 3vw, 1.15rem);
     color: var(--text-primary);
     opacity: 0.8;
 }
@@ -629,7 +632,7 @@ h1, h2, h3, h4 {
     position: relative;
     border-radius: var(--radius-lg);
     overflow: hidden;
-    min-height: 26.25rem;
+    min-height: clamp(18rem, 50vw, 26.25rem);
     display: flex;
     align-items: flex-end;
     color: var(--white);
@@ -656,7 +659,7 @@ h1, h2, h3, h4 {
 .event__card-content {
     position: relative;
     z-index: 1;
-    padding: 2.5rem 2rem;
+    padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1rem, 3vw, 2rem);
     width: 100%;
     text-align: center;
 }
@@ -678,7 +681,7 @@ h1, h2, h3, h4 {
 }
 
 .event__venue {
-    font-size: 1.4rem;
+    font-size: clamp(1rem, 3.5vw, 1.4rem);
     margin-bottom: 0.75rem;
     line-height: 1.4;
 }
@@ -693,7 +696,7 @@ h1, h2, h3, h4 {
 
 .event__time-badge {
     font-family: var(--font-heading);
-    font-size: 1.4rem;
+    font-size: clamp(1.1rem, 3.5vw, 1.4rem);
     font-weight: 600;
     color: var(--silver-light);
     margin-bottom: 0.75rem;
@@ -777,8 +780,8 @@ h1, h2, h3, h4 {
 
 .faq__alert {
     text-align: center;
-    color: #e74c3c; /* Theme-consistent red */
-    font-size: 1.1rem;
+    color: #e74c3c;
+    font-size: clamp(0.9rem, 3vw, 1.1rem);
     font-weight: 600;
     margin-bottom: 2rem;
     letter-spacing: 1px;
@@ -802,14 +805,14 @@ h1, h2, h3, h4 {
 
 .faq__question {
     font-family: var(--font-body);
-    font-size: 1rem;
+    font-size: clamp(0.85rem, 2.5vw, 1rem);
     font-weight: 500;
     color: var(--lavender-deeper);
-    padding: 1.5rem;
+    padding: clamp(1rem, 3vw, 1.5rem);
     cursor: pointer;
     list-style: none;
     position: relative;
-    padding-right: 3rem;
+    padding-right: clamp(2.5rem, 6vw, 3rem);
 }
 
 .faq__question::-webkit-details-marker {
@@ -835,8 +838,8 @@ h1, h2, h3, h4 {
 }
 
 .faq__answer {
-    padding: 0 1.5rem 1.5rem;
-    font-size: 0.95rem;
+    padding: 0 clamp(1rem, 3vw, 1.5rem) clamp(1rem, 3vw, 1.5rem);
+    font-size: clamp(0.85rem, 2.5vw, 0.95rem);
     color: var(--text-secondary);
     line-height: 1.6;
     animation: fadeDown 0.3s ease-out;
@@ -869,7 +872,7 @@ h1, h2, h3, h4 {
     background: rgba(255, 255, 255, 0.75);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    padding: 3rem 2.5rem;
+    padding: clamp(1.5rem, 5vw, 3rem) clamp(1.25rem, 4vw, 2.5rem);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-card);
     border: 1px solid rgba(255, 255, 255, 0.6);
@@ -956,7 +959,7 @@ textarea { resize: none; }
 }
 
 .rsvp__success h3 {
-    font-size: 1.8rem;
+    font-size: clamp(1.3rem, 4vw, 1.8rem);
     color: var(--lavender-dark);
     margin-bottom: 0.75rem;
 }
@@ -987,7 +990,7 @@ textarea { resize: none; }
 
 .rsvp__phone {
     font-family: var(--font-heading);
-    font-size: 1.3rem;
+    font-size: clamp(1rem, 3vw, 1.3rem);
     color: var(--lavender-dark);
     font-weight: 600;
     transition: var(--transition);
@@ -998,19 +1001,19 @@ textarea { resize: none; }
 }
 
 .footer {
-    padding: 3.75rem 0 2.5rem;
+    padding: clamp(2.5rem, 6vw, 3.75rem) 0 clamp(1.5rem, 4vw, 2.5rem);
     text-align: center;
 }
 
 .footer__name {
     font-family: var(--font-heading);
-    font-size: 1.5rem;
+    font-size: clamp(1.1rem, 3.5vw, 1.5rem);
     color: var(--lavender-dark);
     margin-bottom: 0.25rem;
 }
 
 .footer__date {
-    font-size: 0.85rem;
+    font-size: clamp(0.75rem, 2vw, 0.85rem);
     color: var(--text-muted);
     letter-spacing: 2px;
 }
@@ -1018,17 +1021,19 @@ textarea { resize: none; }
 /* ═══════════════════ LANGUAGE TOGGLE ═══════════════════ */
 .nav__lang {
     font-family: var(--font-body);
-    font-size: 0.75rem;
+    font-size: clamp(0.6rem, 1.8vw, 0.75rem);
     font-weight: 600;
     letter-spacing: 1px;
     color: var(--lavender-dark);
     background: rgba(200, 162, 200, 0.15);
     border: 1.5px solid var(--lavender-light);
-    padding: 0.35rem 0.85rem;
+    padding: clamp(0.2rem, 0.5vw, 0.35rem) clamp(0.5rem, 1.5vw, 0.85rem);
     border-radius: 3.125rem;
     cursor: pointer;
     transition: var(--transition);
-    margin-left: 1.5rem; /* Desktop spacing */
+    flex-shrink: 0;
+    margin-left: auto;
+    margin-right: clamp(0.25rem, 1vw, 0.75rem);
 }
 
 .nav__lang:hover {
@@ -1079,29 +1084,26 @@ textarea { resize: none; }
 
 /* ═══════════════════ RESPONSIVE ═══════════════════ */
 @media (max-width: 48em) {
-    :root { --section-padding: 4.375rem 0; }
+    :root { --section-padding: clamp(3rem, 8vw, 4.375rem) 0; }
 
-    /* Mobile Nav — Solid Bar Style */
+    /* Mobile Nav — Full-width bar */
     #header {
-        top: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        border-radius: 0 !important;
-        margin: 0 !important;
+        top: 0;
+        width: 100%;
+        max-width: 100%;
+        border-radius: 0;
+        margin: 0;
     }
 
     #header::before {
-        border-radius: 0 !important;
-        border-left: none !important;
-        border-right: none !important;
-        border-top: none !important;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        border-top: none;
     }
 
     .nav {
         justify-content: flex-start;
-        padding: 0 1.5rem !important;
     }
 
     .nav__logo {
@@ -1114,29 +1116,24 @@ textarea { resize: none; }
 
     .nav__menu {
         position: absolute;
-        top: 5rem;
-        left: 0;
-        right: 0;
+        top: 100%;
+        left: 0.5rem;
+        right: 0.5rem;
         height: auto;
         flex-direction: column;
-        background: rgba(253, 251, 253, 0.85);
+        background: rgba(253, 251, 253, 0.92);
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
         border: 1px solid rgba(255, 255, 255, 0.6);
-        border-radius: 1.5rem;
-        padding: 2rem;
-        gap: 1.5rem;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        gap: 1.25rem;
         box-shadow: 0 12px 40px rgba(45, 32, 50, 0.15);
         opacity: 0;
         visibility: hidden;
-        transform: translateY(-20px);
+        transform: translateY(-10px);
         transition: all 0.4s var(--ease);
         z-index: 99;
-    }
-
-    .nav__lang {
-        margin-left: auto; /* Push to right on mobile */
-        margin-right: 0.75rem;
     }
 
     .nav__menu.open { 
@@ -1188,30 +1185,11 @@ textarea { resize: none; }
     .protocol__card {
         flex-direction: column;
         gap: 1.5rem;
-        padding: 2rem 1.5rem;
+        padding: clamp(1.25rem, 4vw, 2rem) clamp(1rem, 3vw, 1.5rem);
     }
 
     .protocol__divider-v {
         width: 100%;
         height: 1px;
     }
-
-    .invitation__card { padding: 2.5rem 1.5rem; }
-    .invitation__families { gap: 2rem; }
-
-    .rsvp__card { padding: 2rem 1.5rem; }
-
-    .event__card-content { padding: 2rem 1.5rem; }
-}
-
-@media (max-width: 30em) {
-    .hero__title { font-size: 2.6rem; }
-    .countdown__block { min-width: 3.125rem; }
-    .countdown__number { font-size: 1.8rem; }
-
-    .gallery-grid {
-        max-width: 100%;
-    }
-
-    .event__card { min-height: 20rem; }
 }
