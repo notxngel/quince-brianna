@@ -1101,17 +1101,16 @@ textarea { resize: none; }
 
     .nav__menu {
         position: absolute;
-        top: 100%;
-        margin-top: 0.75rem;
-        left: 0.5rem;
-        right: 0.5rem;
+        top: 4.8rem;
+        left: 0;
+        right: 0;
         height: auto;
         flex-direction: column;
-        background: rgba(253, 251, 253, 0.92);
+        background: rgba(253, 251, 253, 0.85);
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
         border: 1px solid rgba(255, 255, 255, 0.6);
-        border-radius: 1rem;
+        border-radius: 1.5rem;
         padding: 1.5rem;
         gap: 1.25rem;
         box-shadow: 0 12px 40px rgba(45, 32, 50, 0.15);
