@@ -216,8 +216,8 @@ h1, h2, h3, h4 {
 .nav {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     height: 4.375rem;
+    padding: 0 2rem !important; /* Fixed padding to stay inside the capsule curves */
 }
 
 .nav__logo {
@@ -225,7 +225,11 @@ h1, h2, h3, h4 {
     font-size: 2.2rem;
     color: var(--lavender-dark);
     font-weight: 400;
-    margin-right: 2rem;
+    margin-right: 1.5rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
 }
 
 .nav__logo span {
@@ -236,9 +240,8 @@ h1, h2, h3, h4 {
 
 .nav__menu {
     display: flex;
-    gap: 2rem;
+    gap: 1.5rem;
     margin-left: auto;
-    margin-right: 2rem;
 }
 
 .nav__link {
@@ -1015,18 +1018,17 @@ textarea { resize: none; }
 /* ═══════════════════ LANGUAGE TOGGLE ═══════════════════ */
 .nav__lang {
     font-family: var(--font-body);
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 1px;
     color: var(--lavender-dark);
     background: rgba(200, 162, 200, 0.15);
     border: 1.5px solid var(--lavender-light);
-    padding: 0.25rem 0.75rem;
+    padding: 0.35rem 0.85rem;
     border-radius: 3.125rem;
     cursor: pointer;
     transition: var(--transition);
-    margin-left: auto;
-    margin-right: 0.75rem;
+    margin-left: 1.5rem; /* Desktop spacing */
 }
 
 .nav__lang:hover {
@@ -1112,6 +1114,11 @@ textarea { resize: none; }
         transform: translateY(-20px);
         transition: all 0.4s var(--ease);
         z-index: 99;
+    }
+
+    .nav__lang {
+        margin-left: auto; /* Push to right on mobile */
+        margin-right: 0.75rem;
     }
 
     .nav__menu.open { 

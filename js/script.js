@@ -148,7 +148,7 @@ function initRSVPForm() {
             asistira:     attending,
             invitados:    form.guests.value,
             notas:        form.notes.value.trim(),
-            fecha_envio:  new Date().toLocaleString('es-US', { timeZone: 'America/New_York' }),
+            fecha_envio:  new Date().toLocaleString('es-US'),
         };
 
         submitBtn.disabled = true;
