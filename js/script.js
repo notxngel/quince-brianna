@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initRSVPForm();
     initButterflies();
     initI18n();
+    initCalendar();
 });
 
 /* ═══════════════════ COUNTDOWN ═══════════════════ */
@@ -123,6 +124,19 @@ function initRSVPForm() {
 
     const WEBHOOK_URL = 'https://hook.us2.make.com/dod3woso8orm9cu4jc5tip49ni6vnkdw';
 
+    // Administrador: Restablecer el bloqueo mediante URL (?admin_reset=true)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('admin_reset')) {
+        localStorage.removeItem('rsvp_submitted_brianna');
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+    // Verificar si ya se registró en este dispositivo
+    if (localStorage.getItem('rsvp_submitted_brianna') === 'true') {
+        form.classList.add('hidden');
+        successEl.classList.remove('hidden');
+    }
+
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         clearErrors();
@@ -163,6 +177,9 @@ function initRSVPForm() {
             });
 
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+            // Guardar en localStorage para evitar reenvíos
+            localStorage.setItem('rsvp_submitted_brianna', 'true');
 
             form.classList.add('hidden');
             successEl.classList.remove('hidden');
@@ -313,6 +330,9 @@ const translations = {
         hero_title: 'Mis XV Años',
         hero_date: '25 de Julio, 2026',
         hero_cta: 'Confirmar Asistencia',
+        hero_calendar: 'Añadir al Calendario',
+        cal_google: 'Google Calendar',
+        cal_apple: 'Apple / Outlook',
         cd_days: 'Días',
         cd_hours: 'Horas',
         cd_min: 'Min',
@@ -382,6 +402,9 @@ const translations = {
         hero_title: 'My XV Years',
         hero_date: 'July 25, 2026',
         hero_cta: 'Confirm Attendance',
+        hero_calendar: 'Add to Calendar',
+        cal_google: 'Google Calendar',
+        cal_apple: 'Apple / Outlook',
         cd_days: 'Days',
         cd_hours: 'Hours',
         cd_min: 'Min',
@@ -473,4 +496,60 @@ function setLanguage(lang) {
         const key = el.dataset.i18nPlaceholder;
         if (dict[key]) el.placeholder = dict[key];
     });
+}
+
+/* ═══════════════════ CALENDAR ═══════════════════ */
+
+function initCalendar() {
+    const btn = document.getElementById('calendar-btn');
+    const content = document.getElementById('calendar-content');
+    const appleBtn = document.getElementById('apple-calendar-btn');
+
+    if (!btn || !content) return;
+
+    btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        content.classList.toggle('show');
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!content.contains(e.target)) {
+            content.classList.remove('show');
+        }
+    });
+
+    if (appleBtn) {
+        appleBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const icsData = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Brianna Quinceanera//EN
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+SUMMARY:Mis XV Años - Brianna Itzel Gomez
+DTSTART:20260725T180000Z
+DTEND:20260726T030000Z
+LOCATION:174 Ramsey St\\, Paterson\\, NJ 07501
+DESCRIPTION:Celebra conmigo este día tan especial.
+STATUS:CONFIRMED
+BEGIN:VALARM
+TRIGGER:-PT60M
+ACTION:DISPLAY
+DESCRIPTION:Reminder
+END:VALARM
+END:VEVENT
+END:VCALENDAR`;
+
+            const blob = new Blob([icsData], { type: 'text/calendar;charset=utf-8' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Brianna_XV.ics';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            content.classList.remove('show');
+        });
+    }
 }
