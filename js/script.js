@@ -112,7 +112,15 @@ function initScrollAnimations() {
     });
 }
 
-/* ═══════════════════ RSVP FORM ═══════════════════ */
+/* ═══════════════════ RSVP FORM — SISTEMA BLINDADO ═══════════════════ */
+/*
+ * 5 CAPAS DE SEGURIDAD:
+ * 1. Validación estricta — Ningún campo sale vacío o con datos basura
+ * 2. Respaldo localStorage — Los datos se guardan ANTES de enviar
+ * 3. Verificación del payload — Se confirma que el JSON no esté vacío
+ * 4. Reintentos automáticos — Si falla, reintenta 3 veces con espera progresiva
+ * 5. Cola offline — Si no hay internet, guarda y reenvía cuando vuelva la conexión
+ */
 
 function initRSVPForm() {
     const form       = document.getElementById('rsvp-form');
@@ -123,28 +131,38 @@ function initRSVPForm() {
     const errorEl    = document.getElementById('rsvp-error');
 
     const WEBHOOK_URL = 'https://hook.us2.make.com/dod3woso8orm9cu4jc5tip49ni6vnkdw';
+    const STORAGE_KEY = 'rsvp_submitted_brianna';
+    const PENDING_KEY = 'rsvp_pending_brianna';
+    const MAX_RETRIES = 3;
 
     // Administrador: Restablecer el bloqueo mediante URL (?admin_reset=true)
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('admin_reset')) {
-        localStorage.removeItem('rsvp_submitted_brianna');
+        localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(PENDING_KEY);
         window.history.replaceState({}, document.title, window.location.pathname);
     }
 
     // Verificar si ya se registró en este dispositivo
-    if (localStorage.getItem('rsvp_submitted_brianna') === 'true') {
+    if (localStorage.getItem(STORAGE_KEY) === 'true') {
         form.classList.add('hidden');
         successEl.classList.remove('hidden');
     }
 
+    // ── CAPA 5: Al cargar, intentar reenviar datos pendientes ──
+    retrySendPending();
+
+    // ── Listener principal del formulario ──
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         clearErrors();
 
-        const name      = form.elements['name'].value.trim();
-        const attending = form.elements['attending'].value;
-        const guests    = form.elements['guests'].value;
-        const notes     = form.elements['notes'].value.trim();
+        // ── CAPA 1: Validación estricta de cada campo ──
+        const name      = safeGetValue(form, 'name');
+        const attending = safeGetValue(form, 'attending');
+        const guests    = safeGetValue(form, 'guests');
+        const notes     = safeGetValue(form, 'notes');
+
         let isValid = true;
 
         if (!name || name.length < 2) {
@@ -162,39 +180,215 @@ function initRSVPForm() {
         const payload = {
             nombre:       name,
             asistira:     attending,
-            invitados:    guests,
-            notas:        notes,
-            fecha_envio:  new Date().toLocaleString('es-US'),
+            invitados:    guests || '1',
+            notas:        notes || '',
+            fecha_envio:  new Date().toLocaleDateString('es-US'),
         };
 
+        // ── CAPA 3: Verificar que el payload NO esté vacío ──
+        if (!verifyPayload(payload)) {
+            console.error('RSVP CRÍTICO: Payload vacío detectado, abortando envío.');
+            showError('name', 'Error interno. Intenta de nuevo.');
+            return;
+        }
+
+        // ── CAPA 2: Guardar respaldo en localStorage ANTES de enviar ──
+        savePending(payload);
+
+        // Mostrar estado de carga
         submitBtn.disabled = true;
         btnText.classList.add('hidden');
         btnLoader.classList.remove('hidden');
 
-        try {
-            const response = await fetch(WEBHOOK_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload),
-            });
+        // ── CAPA 4: Enviar con reintentos automáticos ──
+        const success = await sendWithRetry(payload, MAX_RETRIES);
 
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-            // Guardar en localStorage para evitar reenvíos
-            localStorage.setItem('rsvp_submitted_brianna', 'true');
-
+        if (success) {
+            // Limpiar cola pendiente y marcar como enviado
+            localStorage.removeItem(PENDING_KEY);
+            localStorage.setItem(STORAGE_KEY, 'true');
             form.classList.add('hidden');
             successEl.classList.remove('hidden');
-
-        } catch (err) {
-            console.error('RSVP Error:', err);
+        } else {
+            // Si todos los reintentos fallaron, los datos quedan en localStorage
+            // y se reenviarán automáticamente cuando vuelva el internet (CAPA 5)
+            console.warn('RSVP: Todos los reintentos fallaron. Datos guardados para reenvío.');
             errorEl.classList.remove('hidden');
-
             submitBtn.disabled = false;
             btnText.classList.remove('hidden');
             btnLoader.classList.add('hidden');
         }
     });
+
+    // ═══════════════════════════════════════════════════
+    //  FUNCIONES DE SEGURIDAD
+    // ═══════════════════════════════════════════════════
+
+    /**
+     * CAPA 1: Extrae el valor de un campo de forma segura.
+     * Usa form.elements[] para evitar el bug de "property shadowing"
+     * donde form.name devuelve el nombre del formulario en vez del campo.
+     */
+    function safeGetValue(formEl, fieldName) {
+        try {
+            // Método principal: form.elements (el más seguro)
+            const element = formEl.elements[fieldName];
+            if (element && element.value !== undefined) {
+                return String(element.value).trim();
+            }
+
+            // Fallback 1: getElementById
+            const byId = document.getElementById(fieldName);
+            if (byId && byId.value !== undefined) {
+                return String(byId.value).trim();
+            }
+
+            // Fallback 2: querySelector dentro del form
+            const bySelector = formEl.querySelector(`[name="${fieldName}"]`);
+            if (bySelector && bySelector.value !== undefined) {
+                return String(bySelector.value).trim();
+            }
+
+            return '';
+        } catch (err) {
+            console.error(`RSVP: Error leyendo campo "${fieldName}":`, err);
+            return '';
+        }
+    }
+
+    /**
+     * CAPA 3: Verifica que el payload tenga datos reales antes de enviarlo.
+     * Si el nombre o la asistencia están vacíos, bloquea el envío.
+     */
+    function verifyPayload(payload) {
+        if (!payload) return false;
+        if (typeof payload.nombre !== 'string' || payload.nombre.length < 2) return false;
+        if (typeof payload.asistira !== 'string' || payload.asistira.length === 0) return false;
+
+        // Verificar que el JSON stringificado tenga contenido real
+        const json = JSON.stringify(payload);
+        if (json === '{}' || json === '[]' || json.length < 20) return false;
+
+        return true;
+    }
+
+    /**
+     * CAPA 2: Guarda los datos en localStorage como respaldo.
+     * Si el envío falla, los datos no se pierden jamás.
+     */
+    function savePending(payload) {
+        try {
+            localStorage.setItem(PENDING_KEY, JSON.stringify(payload));
+        } catch (err) {
+            console.warn('RSVP: No se pudo guardar respaldo local:', err);
+        }
+    }
+
+    /**
+     * CAPA 4: Envía los datos con reintentos automáticos.
+     * Si falla, espera progresivamente más tiempo antes de reintentar.
+     * Intento 1: inmediato | Intento 2: 2s | Intento 3: 4s
+     */
+    async function sendWithRetry(payload, maxRetries) {
+        for (let attempt = 1; attempt <= maxRetries; attempt++) {
+            try {
+                // Verificar conexión antes de enviar
+                if (!navigator.onLine) {
+                    console.warn(`RSVP: Sin internet (intento ${attempt}/${maxRetries}).`);
+                    if (attempt < maxRetries) {
+                        await wait(2000 * attempt);
+                        continue;
+                    }
+                    return false;
+                }
+
+                const jsonBody = JSON.stringify(payload);
+
+                // Última verificación: el body no puede ser vacío
+                if (jsonBody === '{}' || jsonBody.length < 20) {
+                    console.error('RSVP CRÍTICO: Body vacío en intento', attempt);
+                    return false;
+                }
+
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: jsonBody,
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                console.log(`RSVP: Enviado exitosamente (intento ${attempt}).`);
+                return true;
+
+            } catch (err) {
+                console.warn(`RSVP: Fallo intento ${attempt}/${maxRetries}:`, err.message);
+
+                if (attempt < maxRetries) {
+                    // Espera progresiva: 2s, 4s (backoff exponencial)
+                    await wait(2000 * attempt);
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * CAPA 5: Reenvía datos pendientes guardados en localStorage.
+     * Se ejecuta al cargar la página Y cuando el internet se reconecta.
+     * Así, si el usuario cierra la página sin internet, la próxima vez
+     * que la abra, los datos se envían automáticamente.
+     */
+    async function retrySendPending() {
+        const pendingRaw = localStorage.getItem(PENDING_KEY);
+        if (!pendingRaw) return;
+
+        try {
+            const payload = JSON.parse(pendingRaw);
+
+            // Verificar que los datos pendientes sean válidos
+            if (!verifyPayload(payload)) {
+                localStorage.removeItem(PENDING_KEY);
+                return;
+            }
+
+            // Solo intentar si hay internet
+            if (!navigator.onLine) return;
+
+            console.log('RSVP: Reenviando datos pendientes...');
+            const success = await sendWithRetry(payload, MAX_RETRIES);
+
+            if (success) {
+                localStorage.removeItem(PENDING_KEY);
+                localStorage.setItem(STORAGE_KEY, 'true');
+                console.log('RSVP: Datos pendientes enviados exitosamente.');
+
+                // Si el formulario está visible, mostrar éxito
+                if (!form.classList.contains('hidden')) {
+                    form.classList.add('hidden');
+                    successEl.classList.remove('hidden');
+                }
+            }
+        } catch (err) {
+            console.error('RSVP: Error al reenviar pendientes:', err);
+        }
+    }
+
+    // ── CAPA 5 (continuación): Escuchar cuando vuelva el internet ──
+    window.addEventListener('online', () => {
+        console.log('RSVP: Internet restaurado. Verificando pendientes...');
+        retrySendPending();
+    });
+
+    /** Utilidad: espera N milisegundos */
+    function wait(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
 
     function showError(fieldId, message) {
         const errorSpan = document.getElementById(`${fieldId}-error`);
