@@ -182,7 +182,6 @@ function initRSVPForm() {
             asistira:     attending,
             invitados:    guests || '1',
             notas:        notes || '',
-            fecha_envio:  new Date().toLocaleDateString('es-US'),
         };
 
         // ── CAPA 3: Verificar que el payload NO esté vacío ──
