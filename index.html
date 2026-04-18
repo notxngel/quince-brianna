@@ -27,7 +27,28 @@
 
     <link rel="stylesheet" href="css/styles.css?v=13">
 </head>
-<body>
+<body class="maintenance-active">
+
+    <!-- ═══════════════════ MODO MANTENIMIENTO ═══════════════════ -->
+    <div class="maintenance-overlay">
+        <div class="maintenance__card">
+            <div class="maintenance__logo">Brianna's 15</div>
+            <h2 class="maintenance__title">Momentito...</h2>
+            <p class="maintenance__text">
+                Estamos ajustando los últimos detalles para que todo <br>
+                salga perfecto. ¡Regresamos en unos minutos!
+            </p>
+            <div class="maintenance__loader"></div>
+        </div>
+        
+        <!-- Decoración de fondo -->
+        <div class="maintenance__bg-icons">
+            <span style="top: 10%; left: 15%;">🦋</span>
+            <span style="top: 20%; right: 10%;">🦋</span>
+            <span style="bottom: 15%; left: 10%;">🦋</span>
+            <span style="bottom: 25%; right: 15%;">🦋</span>
+        </div>
+    </div>
 
     <header id="header">
         <nav class="nav container">

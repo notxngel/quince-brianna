@@ -37,8 +37,8 @@
     --radius-lg:      1.5rem;
     --ease:           cubic-bezier(0.25, 0.46, 0.45, 0.94);
     --transition:     color 0.4s var(--ease), background-color 0.4s var(--ease),
-                      border-color 0.4s var(--ease), box-shadow 0.4s var(--ease),
-                      transform 0.4s var(--ease), opacity 0.4s var(--ease);
+                    border-color 0.4s var(--ease), box-shadow 0.4s var(--ease),
+                    transform 0.4s var(--ease), opacity 0.4s var(--ease);
 }
 
 /* ═══════════════════ RESET ═══════════════════ */
@@ -58,13 +58,21 @@ body {
     font-weight: 300;
     color: var(--text-primary);
     background-color: var(--off-white);
+    line-height: 1.7;
+    overflow-x: clip; /* Fix iOS jitter replacing hidden with clip */
+}
+
+/* Fix iOS background-attachment: fixed jitter issue */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
     background-image: url('../assets/lavender-texture.png');
     background-repeat: no-repeat;
     background-size: cover;
-    background-attachment: fixed;
     background-position: center;
-    line-height: 1.7;
-    overflow-x: hidden;
+    pointer-events: none;
 }
 
 img {
@@ -311,7 +319,7 @@ h1, h2, h3, h4 {
 /* ═══════════════════ HERO ═══════════════════ */
 .hero {
     min-height: 100vh;
-    min-height: 100dvh;
+    min-height: 100svh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1179,6 +1187,7 @@ textarea { resize: none; }
     }
 }
 
+
 /* ═══════════════════ CALENDAR DROPDOWN ═══════════════════ */
 .hero__actions {
     display: flex;
@@ -1232,4 +1241,112 @@ textarea { resize: none; }
 .calendar-dropdown__content a:hover {
     background-color: var(--lavender-bg);
     color: var(--lavender-dark);
+}
+
+
+.maintenance-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    background: radial-gradient(circle at center, var(--lavender-bg), #f0def0);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    overflow: hidden;
+}
+
+body.maintenance-active {
+    overflow: hidden;
+}
+
+body.maintenance-active .maintenance-overlay {
+    display: flex;
+}
+
+body.maintenance-active main,
+body.maintenance-active #header,
+body.maintenance-active footer {
+    display: none !important;
+}
+
+.maintenance__card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: clamp(3rem, 10vw, 5rem) 2.5rem;
+    border-radius: 2.5rem;
+    box-shadow: 
+        0 20px 50px rgba(155, 114, 160, 0.15),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+    max-width: 600px;
+    width: 100%;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    animation: maintenancePop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.maintenance__logo {
+    font-family: var(--font-script);
+    font-size: clamp(3rem, 12vw, 4.5rem);
+    background: linear-gradient(135deg, var(--lavender-dark), var(--lavender-deeper));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 2rem;
+}
+
+.maintenance__title {
+    font-size: clamp(2rem, 6vw, 2.8rem);
+    color: var(--text-primary);
+    margin-bottom: 1.25rem;
+    letter-spacing: -1px;
+}
+
+.maintenance__text {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 3rem;
+    font-weight: 300;
+}
+
+.maintenance__loader {
+    width: 60px;
+    height: 60px;
+    border: 4px solid rgba(200, 162, 200, 0.2);
+    border-top-color: var(--lavender-dark);
+    border-radius: 50%;
+    margin: 0 auto;
+    animation: spin 1.2s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes maintenancePop {
+    from { opacity: 0; transform: scale(0.9) translateY(30px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.maintenance__bg-icons {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.maintenance__bg-icons span {
+    position: absolute;
+    filter: drop-shadow(0 5px 15px rgba(155, 114, 160, 0.3));
+    opacity: 0.3;
+    font-size: 2.5rem;
+    animation: floatComplex 8s infinite ease-in-out;
+}
+
+@keyframes floatComplex {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    33% { transform: translate(15px, -25px) rotate(15deg); }
+    66% { transform: translate(-10px, -15px) rotate(-10deg); }
 }

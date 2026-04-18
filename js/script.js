@@ -141,8 +141,10 @@ function initRSVPForm() {
         e.preventDefault();
         clearErrors();
 
-        const name      = form.name.value.trim();
-        const attending = form.attending.value;
+        const name      = form.elements['name'].value.trim();
+        const attending = form.elements['attending'].value;
+        const guests    = form.elements['guests'].value;
+        const notes     = form.elements['notes'].value.trim();
         let isValid = true;
 
         if (!name || name.length < 2) {
@@ -160,8 +162,8 @@ function initRSVPForm() {
         const payload = {
             nombre:       name,
             asistira:     attending,
-            invitados:    form.guests.value,
-            notas:        form.notes.value.trim(),
+            invitados:    guests,
+            notas:        notes,
             fecha_envio:  new Date().toLocaleString('es-US'),
         };
 
@@ -211,22 +213,22 @@ function initRSVPForm() {
 /* ═══════════════════ BUTTERFLIES ═══════════════════ */
 
 function initButterflies() {
-  const hero = document.getElementById('inicio');
-  if (!hero) return;
+    const hero = document.getElementById('inicio');
+    if (!hero) return;
 
-  const PALETTE = [
+    const PALETTE = [
     { body:'#7A5280', top:'#C8A2C8', topS:'#9B72A0', bot:'#B08AB0', botS:'#7A5280', spot:'#E8D5E8' },
     { body:'#9B72A0', top:'#DDB8DD', topS:'#C8A2C8', bot:'#C8A2C8', botS:'#9B72A0', spot:'#F0E0F0' },
     { body:'#888888', top:'#D0D0D0', topS:'#B0B0B0', bot:'#C0C0C0', botS:'#888888', spot:'#EFEFEF' },
     { body:'#7A5280', top:'#E8C8E8', topS:'#C8A2C8', bot:'#D0A8D0', botS:'#9B72A0', spot:'#F8EAF8' },
     { body:'#888888', top:'#E0E0E0', topS:'#AAAAAA', bot:'#CCCCCC', botS:'#888888', spot:'#F5F5F5' },
     { body:'#5A4060', top:'#B090B8', topS:'#8060A0', bot:'#9878A8', botS:'#6A4878', spot:'#D4C0DC' },
-  ];
+];
 
-  function makeSVG(p, s) {
+function makeSVG(p, s) {
     const tw=s*1.1,th=s*.75,bw=s*.75,bh=s*.55,cx=s*.08,ch=s*.85;
     return `<svg width="${s*2.4}" height="${s*2.2}" viewBox="${-s*1.2} ${-s*1.1} ${s*2.4} ${s*2.2}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <g class="wing-l" style="--bt-fs:var(--bt-flap-speed)">
+        <g class="wing-l" style="--bt-fs:var(--bt-flap-speed)">
         <path d="M0,${-s*.1} C${-tw*.3},${-th*.9} ${-tw},${-th*.95} ${-tw*.95},${-th*.2} C${-tw},${th*.2} ${-tw*.25},${th*.5} 0,${s*.05}Z" fill="${p.top}" stroke="${p.topS}" stroke-width="0.8" opacity="0.93"/>
         <line x1="0" y1="0" x2="${-tw*.7}" y2="${-th*.6}" stroke="${p.topS}" stroke-width="0.5" opacity="0.5"/>
         <line x1="0" y1="0" x2="${-tw*.88}" y2="${-th*.05}" stroke="${p.topS}" stroke-width="0.4" opacity="0.4"/>
@@ -234,8 +236,8 @@ function initButterflies() {
         <circle cx="${-tw*.55}" cy="${-th*.45}" r="${s*.09}" fill="${p.spot}" opacity="0.75"/>
         <path d="M0,${s*.05} C${-bw*.3},${s*.1} ${-bw},${bh*.5} ${-bw*.85},${bh*.95} C${-bw*.5},${bh*1.15} ${-bw*.1},${bh*.7} 0,${s*.45}Z" fill="${p.bot}" stroke="${p.botS}" stroke-width="0.7" opacity="0.85"/>
         <circle cx="${-bw*.5}" cy="${bh*.6}" r="${s*.07}" fill="${p.spot}" opacity="0.6"/>
-      </g>
-      <g class="wing-r" style="--bt-fs:var(--bt-flap-speed)">
+        </g>
+        <g class="wing-r" style="--bt-fs:var(--bt-flap-speed)">
         <path d="M0,${-s*.1} C${tw*.3},${-th*.9} ${tw},${-th*.95} ${tw*.95},${-th*.2} C${tw},${th*.2} ${tw*.25},${th*.5} 0,${s*.05}Z" fill="${p.top}" stroke="${p.topS}" stroke-width="0.8" opacity="0.93"/>
         <line x1="0" y1="0" x2="${tw*.7}" y2="${-th*.6}" stroke="${p.topS}" stroke-width="0.5" opacity="0.5"/>
         <line x1="0" y1="0" x2="${tw*.88}" y2="${-th*.05}" stroke="${p.topS}" stroke-width="0.4" opacity="0.4"/>
@@ -243,25 +245,25 @@ function initButterflies() {
         <circle cx="${tw*.55}" cy="${-th*.45}" r="${s*.09}" fill="${p.spot}" opacity="0.75"/>
         <path d="M0,${s*.05} C${bw*.3},${s*.1} ${bw},${bh*.5} ${bw*.85},${bh*.95} C${bw*.5},${bh*1.15} ${bw*.1},${bh*.7} 0,${s*.45}Z" fill="${p.bot}" stroke="${p.botS}" stroke-width="0.7" opacity="0.85"/>
         <circle cx="${bw*.5}" cy="${bh*.6}" r="${s*.07}" fill="${p.spot}" opacity="0.6"/>
-      </g>
-      <ellipse cx="0" cy="${s*.15}" rx="${cx}" ry="${ch}" fill="${p.body}" opacity="0.95"/>
-      <path d="M${-cx},${-ch*.7} Q${-s*.18},${-s*.9} ${-s*.12},${-s*1.0}" fill="none" stroke="${p.body}" stroke-width="0.6" opacity="0.7"/>
-      <circle cx="${-s*.12}" cy="${-s*1.0}" r="${s*.04}" fill="${p.body}" opacity="0.7"/>
-      <path d="M${cx},${-ch*.7} Q${s*.18},${-s*.9} ${s*.12},${-s*1.0}" fill="none" stroke="${p.body}" stroke-width="0.6" opacity="0.7"/>
-      <circle cx="${s*.12}" cy="${-s*1.0}" r="${s*.04}" fill="${p.body}" opacity="0.7"/>
+        </g>
+        <ellipse cx="0" cy="${s*.15}" rx="${cx}" ry="${ch}" fill="${p.body}" opacity="0.95"/>
+        <path d="M${-cx},${-ch*.7} Q${-s*.18},${-s*.9} ${-s*.12},${-s*1.0}" fill="none" stroke="${p.body}" stroke-width="0.6" opacity="0.7"/>
+        <circle cx="${-s*.12}" cy="${-s*1.0}" r="${s*.04}" fill="${p.body}" opacity="0.7"/>
+        <path d="M${cx},${-ch*.7} Q${s*.18},${-s*.9} ${s*.12},${-s*1.0}" fill="none" stroke="${p.body}" stroke-width="0.6" opacity="0.7"/>
+        <circle cx="${s*.12}" cy="${-s*1.0}" r="${s*.04}" fill="${p.body}" opacity="0.7"/>
     </svg>`;
-  }
+}
 
-  const CONFIGS = [
+const CONFIGS = [
     { x: 12, delay: 0,   driftX: -0.8, size: 28, flapSpeed: 0.28 },
     { x: 28, delay: 180, driftX:  0.5, size: 22, flapSpeed: 0.22 },
     { x: 50, delay: 80,  driftX: -0.3, size: 32, flapSpeed: 0.31 },
     { x: 65, delay: 300, driftX:  1.0, size: 20, flapSpeed: 0.20 },
     { x: 78, delay: 140, driftX: -0.6, size: 26, flapSpeed: 0.26 },
     { x: 90, delay: 240, driftX:  0.4, size: 24, flapSpeed: 0.24 },
-  ];
+];
 
-  const instances = CONFIGS.map((cfg, i) => {
+const instances = CONFIGS.map((cfg, i) => {
     const p  = PALETTE[i % PALETTE.length];
     const el = document.createElement('div');
     el.className = 'butterfly';
