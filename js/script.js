@@ -1,13 +1,13 @@
 /**
  * Script Principal — Quinceañera Brianna Itzel Gomez
- * Módulos: Countdown, RSVP, Navigation, Animations, Butterflies, i18n
+ * Módulos: Countdown, Navigation, Animations, Butterflies, i18n, Calendar
+ * Nota: El registro (RSVP) está cerrado — el formulario y su lógica de envío fueron retirados.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
     initCountdown();
     initNavigation();
     initScrollAnimations();
-    initRSVPForm();
     initButterflies();
     initI18n();
     initCalendar();
@@ -110,297 +110,6 @@ function initScrollAnimations() {
             observer.observe(el);
         }
     });
-}
-
-/* ═══════════════════ RSVP FORM — SISTEMA BLINDADO ═══════════════════ */
-/*
- * 5 CAPAS DE SEGURIDAD:
- * 1. Validación estricta — Ningún campo sale vacío o con datos basura
- * 2. Respaldo localStorage — Los datos se guardan ANTES de enviar
- * 3. Verificación del payload — Se confirma que el JSON no esté vacío
- * 4. Reintentos automáticos — Si falla, reintenta 3 veces con espera progresiva
- * 5. Cola offline — Si no hay internet, guarda y reenvía cuando vuelva la conexión
- */
-
-function initRSVPForm() {
-    const form       = document.getElementById('rsvp-form');
-    const submitBtn  = document.getElementById('submit-btn');
-    const btnText    = submitBtn.querySelector('.btn__text');
-    const btnLoader  = submitBtn.querySelector('.btn__loader');
-    const successEl  = document.getElementById('rsvp-success');
-    const errorEl    = document.getElementById('rsvp-error');
-
-    const WEBHOOK_URL = 'https://hook.us2.make.com/dod3woso8orm9cu4jc5tip49ni6vnkdw';
-    const STORAGE_KEY = 'rsvp_submitted_brianna';
-    const PENDING_KEY = 'rsvp_pending_brianna';
-    const MAX_RETRIES = 3;
-
-    // Administrador: Restablecer el bloqueo mediante URL (?admin_reset=true)
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.has('admin_reset')) {
-        localStorage.removeItem(STORAGE_KEY);
-        localStorage.removeItem(PENDING_KEY);
-        window.history.replaceState({}, document.title, window.location.pathname);
-    }
-
-    // Verificar si ya se registró en este dispositivo
-    if (localStorage.getItem(STORAGE_KEY) === 'true') {
-        form.classList.add('hidden');
-        successEl.classList.remove('hidden');
-    }
-
-    // ── CAPA 5: Al cargar, intentar reenviar datos pendientes ──
-    retrySendPending();
-
-    // ── Listener principal del formulario ──
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        clearErrors();
-
-        // ── CAPA 1: Validación estricta de cada campo ──
-        const name      = safeGetValue(form, 'name');
-        const attending = safeGetValue(form, 'attending');
-        const guests    = safeGetValue(form, 'guests');
-        const notes     = safeGetValue(form, 'notes');
-
-        let isValid = true;
-
-        if (!name || name.length < 2) {
-            showError('name', 'Por favor ingresa tu nombre completo');
-            isValid = false;
-        }
-
-        if (!attending) {
-            showError('attending', 'Selecciona una opción');
-            isValid = false;
-        }
-
-        if (!isValid) return;
-
-        const payload = {
-            nombre:       name,
-            asistira:     attending,
-            invitados:    guests || '1',
-            notas:        notes || '',
-        };
-
-        // ── CAPA 3: Verificar que el payload NO esté vacío ──
-        if (!verifyPayload(payload)) {
-            console.error('RSVP CRÍTICO: Payload vacío detectado, abortando envío.');
-            showError('name', 'Error interno. Intenta de nuevo.');
-            return;
-        }
-
-        // ── CAPA 2: Guardar respaldo en localStorage ANTES de enviar ──
-        savePending(payload);
-
-        // Mostrar estado de carga
-        submitBtn.disabled = true;
-        btnText.classList.add('hidden');
-        btnLoader.classList.remove('hidden');
-
-        // ── CAPA 4: Enviar con reintentos automáticos ──
-        const success = await sendWithRetry(payload, MAX_RETRIES);
-
-        if (success) {
-            // Limpiar cola pendiente y marcar como enviado
-            localStorage.removeItem(PENDING_KEY);
-            localStorage.setItem(STORAGE_KEY, 'true');
-            form.classList.add('hidden');
-            successEl.classList.remove('hidden');
-        } else {
-            // Si todos los reintentos fallaron, los datos quedan en localStorage
-            // y se reenviarán automáticamente cuando vuelva el internet (CAPA 5)
-            console.warn('RSVP: Todos los reintentos fallaron. Datos guardados para reenvío.');
-            errorEl.classList.remove('hidden');
-            submitBtn.disabled = false;
-            btnText.classList.remove('hidden');
-            btnLoader.classList.add('hidden');
-        }
-    });
-
-    // ═══════════════════════════════════════════════════
-    //  FUNCIONES DE SEGURIDAD
-    // ═══════════════════════════════════════════════════
-
-    /**
-     * CAPA 1: Extrae el valor de un campo de forma segura.
-     * Usa form.elements[] para evitar el bug de "property shadowing"
-     * donde form.name devuelve el nombre del formulario en vez del campo.
-     */
-    function safeGetValue(formEl, fieldName) {
-        try {
-            // Método principal: form.elements (el más seguro)
-            const element = formEl.elements[fieldName];
-            if (element && element.value !== undefined) {
-                return String(element.value).trim();
-            }
-
-            // Fallback 1: getElementById
-            const byId = document.getElementById(fieldName);
-            if (byId && byId.value !== undefined) {
-                return String(byId.value).trim();
-            }
-
-            // Fallback 2: querySelector dentro del form
-            const bySelector = formEl.querySelector(`[name="${fieldName}"]`);
-            if (bySelector && bySelector.value !== undefined) {
-                return String(bySelector.value).trim();
-            }
-
-            return '';
-        } catch (err) {
-            console.error(`RSVP: Error leyendo campo "${fieldName}":`, err);
-            return '';
-        }
-    }
-
-    /**
-     * CAPA 3: Verifica que el payload tenga datos reales antes de enviarlo.
-     * Si el nombre o la asistencia están vacíos, bloquea el envío.
-     */
-    function verifyPayload(payload) {
-        if (!payload) return false;
-        if (typeof payload.nombre !== 'string' || payload.nombre.length < 2) return false;
-        if (typeof payload.asistira !== 'string' || payload.asistira.length === 0) return false;
-
-        // Verificar que el JSON stringificado tenga contenido real
-        const json = JSON.stringify(payload);
-        if (json === '{}' || json === '[]' || json.length < 20) return false;
-
-        return true;
-    }
-
-    /**
-     * CAPA 2: Guarda los datos en localStorage como respaldo.
-     * Si el envío falla, los datos no se pierden jamás.
-     */
-    function savePending(payload) {
-        try {
-            localStorage.setItem(PENDING_KEY, JSON.stringify(payload));
-        } catch (err) {
-            console.warn('RSVP: No se pudo guardar respaldo local:', err);
-        }
-    }
-
-    /**
-     * CAPA 4: Envía los datos con reintentos automáticos.
-     * Si falla, espera progresivamente más tiempo antes de reintentar.
-     * Intento 1: inmediato | Intento 2: 2s | Intento 3: 4s
-     */
-    async function sendWithRetry(payload, maxRetries) {
-        for (let attempt = 1; attempt <= maxRetries; attempt++) {
-            try {
-                // Verificar conexión antes de enviar
-                if (!navigator.onLine) {
-                    console.warn(`RSVP: Sin internet (intento ${attempt}/${maxRetries}).`);
-                    if (attempt < maxRetries) {
-                        await wait(2000 * attempt);
-                        continue;
-                    }
-                    return false;
-                }
-
-                const jsonBody = JSON.stringify(payload);
-
-                // Última verificación: el body no puede ser vacío
-                if (jsonBody === '{}' || jsonBody.length < 20) {
-                    console.error('RSVP CRÍTICO: Body vacío en intento', attempt);
-                    return false;
-                }
-
-                const response = await fetch(WEBHOOK_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                    },
-                    body: jsonBody,
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-
-                console.log(`RSVP: Enviado exitosamente (intento ${attempt}).`);
-                return true;
-
-            } catch (err) {
-                console.warn(`RSVP: Fallo intento ${attempt}/${maxRetries}:`, err.message);
-
-                if (attempt < maxRetries) {
-                    // Espera progresiva: 2s, 4s (backoff exponencial)
-                    await wait(2000 * attempt);
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * CAPA 5: Reenvía datos pendientes guardados en localStorage.
-     * Se ejecuta al cargar la página Y cuando el internet se reconecta.
-     * Así, si el usuario cierra la página sin internet, la próxima vez
-     * que la abra, los datos se envían automáticamente.
-     */
-    async function retrySendPending() {
-        const pendingRaw = localStorage.getItem(PENDING_KEY);
-        if (!pendingRaw) return;
-
-        try {
-            const payload = JSON.parse(pendingRaw);
-
-            // Verificar que los datos pendientes sean válidos
-            if (!verifyPayload(payload)) {
-                localStorage.removeItem(PENDING_KEY);
-                return;
-            }
-
-            // Solo intentar si hay internet
-            if (!navigator.onLine) return;
-
-            console.log('RSVP: Reenviando datos pendientes...');
-            const success = await sendWithRetry(payload, MAX_RETRIES);
-
-            if (success) {
-                localStorage.removeItem(PENDING_KEY);
-                localStorage.setItem(STORAGE_KEY, 'true');
-                console.log('RSVP: Datos pendientes enviados exitosamente.');
-
-                // Si el formulario está visible, mostrar éxito
-                if (!form.classList.contains('hidden')) {
-                    form.classList.add('hidden');
-                    successEl.classList.remove('hidden');
-                }
-            }
-        } catch (err) {
-            console.error('RSVP: Error al reenviar pendientes:', err);
-        }
-    }
-
-    // ── CAPA 5 (continuación): Escuchar cuando vuelva el internet ──
-    window.addEventListener('online', () => {
-        console.log('RSVP: Internet restaurado. Verificando pendientes...');
-        retrySendPending();
-    });
-
-    /** Utilidad: espera N milisegundos */
-    function wait(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    function showError(fieldId, message) {
-        const errorSpan = document.getElementById(`${fieldId}-error`);
-        const input     = document.getElementById(fieldId);
-        if (errorSpan) errorSpan.textContent = message;
-        if (input) input.classList.add('error');
-    }
-
-    function clearErrors() {
-        document.querySelectorAll('.form__error').forEach(el => el.textContent = '');
-        document.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
-        errorEl.classList.add('hidden');
-    }
 }
 
 /* ═══════════════════ BUTTERFLIES ═══════════════════ */
@@ -520,11 +229,11 @@ const translations = {
         nav_historia: 'Historia',
         nav_evento: 'Evento',
         nav_faq: 'Preguntas',
-        nav_confirmar: 'Confirmar',
+        nav_confirmar: 'Asistencia',
         hero_pre: 'Con la bendición de Dios',
         hero_title: 'Mis XV Años',
         hero_date: '25 de Julio, 2026',
-        hero_cta: 'Confirmar Asistencia',
+        hero_cta: 'Ver Detalles del Evento',
         hero_calendar: 'Añadir al Calendario',
         cal_google: 'Google Calendar',
         cal_apple: 'Apple / Outlook',
@@ -553,38 +262,26 @@ const translations = {
         proto_note: 'Nota Especial',
         proto_envelopes: 'Lluvia de Sobres',
         faq_title: 'Preguntas Frecuentes',
-        faq_alert: '¡Atención! Por favor lee esto antes de confirmar',
+        faq_alert: 'Información importante para nuestros invitados confirmados',
         faq_q1: '¿Cuál es el código de vestimenta?',
         faq_a1: 'Formal (Etiqueta Rigurosa). Te pedimos amablemente NO utilizar el color morado ni plateado, ya que están reservados para la Quinceañera.',
         faq_q2: '¿Puedo llevar un acompañante o niños (plus one)?',
         faq_a2: 'Nuestra recepción es un evento privado y con capacidad limitada. Te rogamos asistir únicamente las personas especificadas en el formulario de confirmación (RSVP).',
         faq_q3: '¿Tienen alguna sugerencia de regalo?',
         faq_a3: 'El mejor regalo es tu presencia. Si deseas tener un detalle adicional con Brianna, agradecemos mucho el formato de "Lluvia de Sobres" (Efectivo o Gift Cards).',
-        faq_q4: '¿Cuál es la fecha límite para confirmar asistencia?',
-        faq_a4: 'Por favor confírmanos tu asistencia a más tardar el 25 de Junio, 2026, para poder organizar todos los detalles con anticipación.',
-        rsvp_title: 'Confirmar Asistencia',
-        rsvp_deadline: 'Favor de confirmar antes del <strong><time datetime="2026-06-25">25 de Junio, 2026</time></strong>',
-        form_name: 'Nombre Completo',
-        form_name_ph: 'Ej: María García',
-        form_attending: '¿Asistirás?',
-        form_select: 'Selecciona...',
-        form_yes: 'Sí, asistiré',
-        form_no: 'No podré asistir',
-        form_guests: 'Número de Personas',
-        form_1p: '1 Persona',
-        form_2p: '2 Personas',
-        form_3p: '3 Personas',
-        form_4p: '4 Personas',
-        form_5p: '5 Personas',
-        form_notes: 'Alergias o Notas',
-        form_notes_ph: 'Restricciones alimenticias, mensaje, etc.',
-        form_submit: 'Enviar Confirmación',
-        form_sending: 'Enviando...',
-        success_title: 'Gracias por confirmar',
-        success_msg: 'Tu respuesta ha sido registrada exitosamente.<br>Nos vemos el <time datetime="2026-07-25">25 de Julio</time>.',
-        error_msg: 'Hubo un problema al enviar. Puedes confirmar directamente al:',
-        error_call: 'Llamar al 973-851-7863',
-        alt_phone: '¿Prefieres confirmar por teléfono?',
+        faq_q4: '¿Aún puedo confirmar mi asistencia?',
+        faq_a4: 'El periodo de confirmación ha concluido y nuestra lista de invitados está completa. Únicamente las personas que completaron su registro podrán asistir. Si ya confirmaste y necesitas comunicarnos algún cambio, con gusto te atendemos al 973-851-7863.',
+        rsvp_title: 'Confirmaciones Cerradas',
+        rsvp_deadline: 'Evento privado — Acceso exclusivo para invitados confirmados',
+        closed_title: 'Nuestra lista de invitados está completa',
+        closed_msg1: 'El periodo para confirmar asistencia ha concluido. Agradecemos de todo corazón a cada una de las personas que confirmaron su presencia; será un honor compartir con ustedes este día tan especial.',
+        closed_msg2: 'Por respeto al aforo y a la organización del evento, únicamente podrán asistir las personas que completaron su confirmación. La información de esta invitación está dirigida exclusivamente a ellas.',
+        closed_date_label: 'Fecha',
+        closed_date: 'Sábado, 25 de Julio, 2026',
+        closed_church: "2:00 PM — Iglesia St. Bonaventure's<br>174 Ramsey St., Paterson, NJ 07501",
+        closed_banquet: '7:00 PM — Milan Banquets<br>32 Passaic St., Garfield, NJ 07026',
+        closed_farewell: 'Con cariño, Brianna y su familia',
+        alt_phone: '¿Tienes alguna pregunta sobre el evento?',
     },
     en: {
         nav_inicio: 'Home',
@@ -592,11 +289,11 @@ const translations = {
         nav_historia: 'Story',
         nav_evento: 'Event',
         nav_faq: 'Questions',
-        nav_confirmar: 'RSVP',
+        nav_confirmar: 'Attendance',
         hero_pre: 'With the blessing of God',
         hero_title: 'My XV Years',
         hero_date: 'July 25, 2026',
-        hero_cta: 'Confirm Attendance',
+        hero_cta: 'View Event Details',
         hero_calendar: 'Add to Calendar',
         cal_google: 'Google Calendar',
         cal_apple: 'Apple / Outlook',
@@ -625,38 +322,26 @@ const translations = {
         proto_note: 'Special Note',
         proto_envelopes: 'Envelope Rain',
         faq_title: 'Frequently Asked Questions',
-        faq_alert: 'Attention! Please read this before confirming',
+        faq_alert: 'Important information for our confirmed guests',
         faq_q1: 'What is the dress code?',
         faq_a1: 'Formal (Black Tie). We kindly ask that you DO NOT wear purple or silver, as they are reserved for the Quinceañera.',
         faq_q2: 'Can I bring a plus one or children?',
         faq_a2: 'Our reception is a private event with limited capacity. We request that only the people specified in your confirmation form (RSVP) attend.',
         faq_q3: 'Do you have a gift registry?',
         faq_a3: 'Your presence is the best gift. If you wish to bring an additional detail for Brianna, we deeply appreciate the "Envelope Rain" format (Cash or Gift Cards).',
-        faq_q4: 'What is the RSVP deadline?',
-        faq_a4: 'Please confirm your attendance no later than June 25, 2026, so we can organize all details in advance.',
-        rsvp_title: 'Confirm Attendance',
-        rsvp_deadline: 'Please confirm before <strong><time datetime="2026-06-25">June 25, 2026</time></strong>',
-        form_name: 'Full Name',
-        form_name_ph: 'E.g: Maria Garcia',
-        form_attending: 'Will you attend?',
-        form_select: 'Select...',
-        form_yes: 'Yes, I will attend',
-        form_no: 'I will not be able to attend',
-        form_guests: 'Number of Guests',
-        form_1p: '1 Person',
-        form_2p: '2 People',
-        form_3p: '3 People',
-        form_4p: '4 People',
-        form_5p: '5 People',
-        form_notes: 'Allergies or Notes',
-        form_notes_ph: 'Dietary restrictions, message, etc.',
-        form_submit: 'Send Confirmation',
-        form_sending: 'Sending...',
-        success_title: 'Thank you for confirming',
-        success_msg: 'Your response has been successfully recorded.<br>See you on <time datetime="2026-07-25">July 25</time>.',
-        error_msg: 'There was a problem sending. You can confirm directly at:',
-        error_call: 'Call 973-851-7863',
-        alt_phone: 'Prefer to confirm by phone?',
+        faq_q4: 'Can I still RSVP?',
+        faq_a4: 'The confirmation period has come to an end and our guest list is complete. Only guests who completed their registration will be able to attend. If you already confirmed and need to let us know about a change, we will gladly assist you at 973-851-7863.',
+        rsvp_title: 'RSVP Closed',
+        rsvp_deadline: 'Private event — Admission exclusively for confirmed guests',
+        closed_title: 'Our guest list is complete',
+        closed_msg1: 'The period to confirm attendance has come to an end. We wholeheartedly thank each person who confirmed their presence; it will be an honor to share this special day with you.',
+        closed_msg2: 'Out of respect for the venue capacity and the organization of the event, only guests who completed their confirmation will be able to attend. The information on this invitation is intended exclusively for them.',
+        closed_date_label: 'Date',
+        closed_date: 'Saturday, July 25, 2026',
+        closed_church: "2:00 PM — St. Bonaventure's Church<br>174 Ramsey St., Paterson, NJ 07501",
+        closed_banquet: '7:00 PM — Milan Banquets<br>32 Passaic St., Garfield, NJ 07026',
+        closed_farewell: 'With love, Brianna and her family',
+        alt_phone: 'Have a question about the event?',
     }
 };
 
@@ -680,7 +365,7 @@ function setLanguage(lang) {
         const key = el.dataset.i18n;
         if (dict[key] === undefined) return;
 
-        if (key === 'rsvp_deadline' || key === 'success_msg' || key === 'inv_blessing') {
+        if (key === 'inv_blessing' || key === 'closed_church' || key === 'closed_banquet') {
             el.innerHTML = dict[key].replace(/\n/g, '<br>');
         } else {
             el.textContent = dict[key];

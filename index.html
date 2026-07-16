@@ -25,7 +25,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="css/styles.css?v=13">
+    <link rel="stylesheet" href="css/styles.css?v=14">
 </head>
 <body>
 
@@ -59,7 +59,7 @@
                 <li><a href="#historia" class="nav__link" data-i18n="nav_historia">Historia</a></li>
                 <li><a href="#evento" class="nav__link" data-i18n="nav_evento">Evento</a></li>
                 <li><a href="#faq" class="nav__link" data-i18n="nav_faq">Preguntas</a></li>
-                <li><a href="#rsvp" class="nav__link nav__link--cta" data-i18n="nav_confirmar">Confirmar</a></li>
+                <li><a href="#rsvp" class="nav__link nav__link--cta" data-i18n="nav_confirmar">Asistencia</a></li>
             </ul>
             <button id="lang-toggle" class="nav__lang" aria-label="Switch language">EN</button>
             <button class="nav__toggle" id="nav-toggle" aria-label="Abrir menú">
@@ -105,7 +105,7 @@
                     </div>
                 </div>
 
-                <a href="#rsvp" class="btn btn--primary animate-on-scroll" data-i18n="hero_cta">Confirmar Asistencia</a>
+                <a href="#evento" class="btn btn--primary animate-on-scroll" data-i18n="hero_cta">Ver Detalles del Evento</a>
             </div>
         </section>
 
@@ -244,7 +244,7 @@
                     <span class="line"></span><span class="diamond">◆</span><span class="line"></span>
                 </div>
 
-                <h3 class="faq__alert animate-on-scroll" data-i18n="faq_alert">¡Atención! Por favor lee esto antes de confirmar</h3>
+                <h3 class="faq__alert animate-on-scroll" data-i18n="faq_alert">Información importante para nuestros invitados confirmados</h3>
 
                 <div class="faq__grid animate-on-scroll">
                     <details class="faq__item">
@@ -262,87 +262,60 @@
                     </details>
 
                     <details class="faq__item">
-                        <summary class="faq__question" data-i18n="faq_q4">¿Cuál es la fecha límite para confirmar asistencia?</summary>
+                        <summary class="faq__question" data-i18n="faq_q4">¿Aún puedo confirmar mi asistencia?</summary>
                         <div class="faq__answer">
-                            <p data-i18n="faq_a4">Por favor confírmanos tu asistencia a más tardar el 25 de Junio, 2026, para poder organizar todos los detalles con anticipación.</p>
+                            <p data-i18n="faq_a4">El periodo de confirmación ha concluido y nuestra lista de invitados está completa. Únicamente las personas que completaron su registro podrán asistir. Si ya confirmaste y necesitas comunicarnos algún cambio, con gusto te atendemos al 973-851-7863.</p>
                         </div>
                     </details>
                 </div>
             </div>
         </section>
 
-        <!-- ═══════════════════ RSVP ═══════════════════ -->
+        <!-- ═══════════════════ ASISTENCIA — CONFIRMACIONES CERRADAS ═══════════════════ -->
         <section id="rsvp" class="rsvp">
             <div class="container">
-                <h2 class="section__title animate-on-scroll" data-i18n="rsvp_title">Confirmar Asistencia</h2>
+                <h2 class="section__title animate-on-scroll" data-i18n="rsvp_title">Confirmaciones Cerradas</h2>
                 <div class="divider animate-on-scroll">
                     <span class="line"></span><span class="diamond">◆</span><span class="line"></span>
                 </div>
-                <p class="rsvp__deadline animate-on-scroll" data-i18n="rsvp_deadline">Favor de confirmar antes del <strong><time datetime="2026-06-25">25 de Junio, 2026</time></strong></p>
+                <p class="rsvp__deadline animate-on-scroll" data-i18n="rsvp_deadline">Evento privado — Acceso exclusivo para invitados confirmados</p>
 
                 <div class="rsvp__card animate-on-scroll">
-                    <form id="rsvp-form" novalidate>
-                        <div class="form__group">
-                            <label for="name" data-i18n="form_name">Nombre Completo</label>
-                            <input type="text" id="name" name="name" data-i18n-placeholder="form_name_ph" placeholder="Ej: María García" required autocomplete="name">
-                            <span class="form__error" id="name-error"></span>
-                        </div>
+                    <div class="rsvp__closed">
+                        <div class="closed__icon">✦</div>
+                        <h3 data-i18n="closed_title">Nuestra lista de invitados está completa</h3>
+                        <p class="closed__msg" data-i18n="closed_msg1">El periodo para confirmar asistencia ha concluido. Agradecemos de todo corazón a cada una de las personas que confirmaron su presencia; será un honor compartir con ustedes este día tan especial.</p>
+                        <p class="closed__msg" data-i18n="closed_msg2">Por respeto al aforo y a la organización del evento, únicamente podrán asistir las personas que completaron su confirmación. La información de esta invitación está dirigida exclusivamente a ellas.</p>
 
-                        <div class="form__row">
-                            <div class="form__group">
-                                <label for="attending" data-i18n="form_attending">¿Asistirás?</label>
-                                <select id="attending" name="attending" required>
-                                    <option value="" data-i18n="form_select">Selecciona...</option>
-                                    <option value="Sí, asistiré" data-i18n="form_yes">Sí, asistiré</option>
-                                    <option value="No podré asistir" data-i18n="form_no">No podré asistir</option>
-                                </select>
-                                <span class="form__error" id="attending-error"></span>
+                        <div class="closed__details">
+                            <div class="closed__detail">
+                                <span class="closed__label" data-i18n="closed_date_label">Fecha</span>
+                                <p data-i18n="closed_date">Sábado, 25 de Julio, 2026</p>
                             </div>
-                            <div class="form__group">
-                                <label for="guests" data-i18n="form_guests">Número de Personas</label>
-                                <select id="guests" name="guests">
-                                    <option value="1" data-i18n="form_1p">1 Persona</option>
-                                    <option value="2" data-i18n="form_2p">2 Personas</option>
-                                    <option value="3" data-i18n="form_3p">3 Personas</option>
-                                    <option value="4" data-i18n="form_4p">4 Personas</option>
-                                    <option value="5" data-i18n="form_5p">5 Personas</option>
-                                </select>
+                            <div class="closed__detail">
+                                <span class="closed__label" data-i18n="event_ceremony">Ceremonia Religiosa</span>
+                                <p data-i18n="closed_church">2:00 PM — Iglesia St. Bonaventure's<br>174 Ramsey St., Paterson, NJ 07501</p>
+                            </div>
+                            <div class="closed__detail">
+                                <span class="closed__label" data-i18n="event_reception">Recepción</span>
+                                <p data-i18n="closed_banquet">7:00 PM — Milan Banquets<br>32 Passaic St., Garfield, NJ 07026</p>
                             </div>
                         </div>
 
-                        <div class="form__group">
-                            <label for="notes" data-i18n="form_notes">Alergias o Notas</label>
-                            <textarea id="notes" name="notes" rows="3" data-i18n-placeholder="form_notes_ph" placeholder="Restricciones alimenticias, mensaje, etc."></textarea>
-                        </div>
-
-                        <button type="submit" class="btn btn--primary btn--full" id="submit-btn">
-                            <span class="btn__text" data-i18n="form_submit">Enviar Confirmación</span>
-                            <span class="btn__loader hidden" data-i18n="form_sending">Enviando...</span>
-                        </button>
-                    </form>
-
-                    <div id="rsvp-success" class="rsvp__success hidden">
-                        <div class="success__icon">✓</div>
-                        <h3 data-i18n="success_title">Gracias por confirmar</h3>
-                        <p data-i18n="success_msg">Tu respuesta ha sido registrada exitosamente.<br>Nos vemos el <time datetime="2026-07-25">25 de Julio</time>.</p>
-                        
-                        <div class="calendar-dropdown" style="margin-top: 1.5rem;">
+                        <div class="calendar-dropdown">
                             <button class="btn btn--outline" id="calendar-btn" data-i18n="hero_calendar">Añadir al Calendario</button>
                             <div class="calendar-dropdown__content" id="calendar-content">
                                 <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Mis+XV+Años+-+Brianna+Itzel+Gomez&dates=20260725T180000Z/20260726T030000Z&details=Celebra+conmigo+este+día+tan+especial.&location=174+Ramsey+St,+Paterson,+NJ+07501" target="_blank" data-i18n="cal_google">Google Calendar</a>
                                 <a href="#" id="apple-calendar-btn" data-i18n="cal_apple">Apple / Outlook</a>
                             </div>
                         </div>
-                    </div>
 
-                    <div id="rsvp-error" class="rsvp__error-msg hidden">
-                        <p data-i18n="error_msg">Hubo un problema al enviar. Puedes confirmar directamente al:</p>
-                        <a href="tel:+19738517863" class="btn btn--outline" data-i18n="error_call">Llamar al 973-851-7863</a>
+                        <p class="closed__farewell" data-i18n="closed_farewell">Con cariño, Brianna y su familia</p>
                     </div>
                 </div>
 
                 <div class="rsvp__alt animate-on-scroll">
-                    <p data-i18n="alt_phone">¿Prefieres confirmar por teléfono?</p>
+                    <p data-i18n="alt_phone">¿Tienes alguna pregunta sobre el evento?</p>
                     <a href="tel:+19738517863" class="rsvp__phone">973-851-7863</a>
                 </div>
             </div>
@@ -359,6 +332,6 @@
         </div>
     </footer>
 
-    <script src="js/script.js"></script>
+    <script src="js/script.js?v=14"></script>
 </body>
 </html>
