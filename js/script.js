@@ -6,7 +6,6 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     initCountdown();
-    initNavigation();
     initScrollAnimations();
     initButterflies();
     initI18n();
@@ -53,38 +52,6 @@ function initCountdown() {
 
     update();
     timerId = setInterval(update, 1000);
-}
-
-/* ═══════════════════ NAVIGATION ═══════════════════ */
-
-function initNavigation() {
-    const header    = document.getElementById('header');
-    const toggle    = document.getElementById('nav-toggle');
-    const menu      = document.getElementById('nav-menu');
-    const navLinks  = document.querySelectorAll('.nav__link');
-
-    toggle.addEventListener('click', () => {
-        toggle.classList.toggle('active');
-        menu.classList.toggle('open');
-    });
-
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            toggle.classList.remove('active');
-            menu.classList.remove('open');
-        });
-    });
-
-    document.addEventListener('click', (e) => {
-        if (!menu.contains(e.target) && !toggle.contains(e.target)) {
-            toggle.classList.remove('active');
-            menu.classList.remove('open');
-        }
-    });
-
-    window.addEventListener('scroll', () => {
-        header.classList.toggle('scrolled', window.scrollY > 60);
-    }, { passive: true });
 }
 
 /* ═══════════════════ SCROLL ANIMATIONS ═══════════════════ */
@@ -224,12 +191,6 @@ const instances = CONFIGS.map((cfg, i) => {
 
 const translations = {
     es: {
-        nav_inicio: 'Inicio',
-        nav_invitacion: 'Invitación',
-        nav_historia: 'Historia',
-        nav_evento: 'Evento',
-        nav_faq: 'Preguntas',
-        nav_confirmar: 'Asistencia',
         hero_pre: 'Con la bendición de Dios',
         hero_title: 'Mis XV Años',
         hero_date: '25 de Julio, 2026',
@@ -284,12 +245,6 @@ const translations = {
         alt_phone: '¿Tienes alguna pregunta sobre el evento?',
     },
     en: {
-        nav_inicio: 'Home',
-        nav_invitacion: 'Invitation',
-        nav_historia: 'Story',
-        nav_evento: 'Event',
-        nav_faq: 'Questions',
-        nav_confirmar: 'Attendance',
         hero_pre: 'With the blessing of God',
         hero_title: 'My XV Years',
         hero_date: 'July 25, 2026',
